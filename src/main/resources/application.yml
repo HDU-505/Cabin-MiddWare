@@ -59,3 +59,8 @@ music:
 gazepoint:
   host: 127.0.0.1
   port: 4242
+
+# 范式相关配置
+paradigm:
+  enabled: true
+  write2File: false

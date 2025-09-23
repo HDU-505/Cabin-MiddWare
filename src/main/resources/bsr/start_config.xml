@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<start_config>
+	<general>
+		<debug>False</debug>
+		<user>master</user>
+		<fullscreen>False</fullscreen>
+		<keyboardMode>dock</keyboardMode>
+		<device>tablet</device>
+		<EEG>True</EEG>
+		<EEG_sensor>touch</EEG_sensor>
+		<GSR>False</GSR>
+		<GSR_sensor>shimmer</GSR_sensor>
+		<PPG>False</PPG>
+		<PPG_sensor>shimmer</PPG_sensor>
+	</general>
+</start_config>

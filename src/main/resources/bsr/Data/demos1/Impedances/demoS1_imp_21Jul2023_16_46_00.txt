@@ -1,0 +1,10 @@
+GND 44 	
+REF 38 	
+AFz 13 	
+AF3 13 	
+AF4 12 	
+AF7 7 	
+AF8 8 	
+Pz 37 	
+P3 21 	
+P4 25 	

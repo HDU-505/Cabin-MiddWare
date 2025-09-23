@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<general>
+	<info>
+		<id>demo</id>
+		<sess>1</sess>
+		<protocol>Classic</protocol>
+		<visualizationWindow>30</visualizationWindow>
+		<updateFrequency>8</updateFrequency>
+		<websocket>False</websocket>
+	</info>
+	<processing>
+		<epoch>3</epoch>
+		<shift>1</shift>
+		<visualMA>30</visualMA>
+		<IAF>False</IAF>
+		<processingMethod>GFP</processingMethod>
+		<blinkMethod>Robust Reblinca</blinkMethod>
+		<filter>True</filter>
+		<HighPass>30</HighPass>
+		<LowPass>2</LowPass>
+		<filter_EOG>True</filter_EOG>
+		<HighPassEOG>10</HighPassEOG>
+		<LowPassEOG>2</LowPassEOG>
+		<ApplyArtifactRejection>True</ApplyArtifactRejection>
+		<ApplyArtRejThreshold>True</ApplyArtRejThreshold>
+		<ArtRejThreshold>80</ArtRejThreshold>
+		<ApplyArtRejDiff>False</ApplyArtRejDiff>
+		<ArtRejMinDist>25</ArtRejMinDist>
+	</processing>
+	<metrics>
+		<workload>
+			<computationMethod>Raw</computationMethod>
+			<compute_on>AFz,AF3,AF4</compute_on>
+			<compute_on_nr>0,1,2</compute_on_nr>
+			<formula>ThetaFrontal</formula>
+		</workload>
+		<arousal>
+			<computationMethod>Raw</computationMethod>
+			<formula>LowPass 0.5Hz</formula>
+			<compute_on>GSR</compute_on>
+		</arousal>
+	</metrics>
+</general>
