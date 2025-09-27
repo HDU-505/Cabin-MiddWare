@@ -21,7 +21,7 @@ public class AppConfig {
 //    }
 
     private final String mindToothWsServerUrl = "ws://127.0.0.1:8888/websocket/w";
-    private final String experimentStatusServerUrl = "ws://127.0.0.1:8888/websocket/experimentStatusServer";
+    private final String experimentStatusServerUrl = "ws://127.0.0.1:8888/websocket/experimentStatusServer?username=neurostudent_signalflow";
 
     @Bean
     @DependsOn("websocketServer")

@@ -125,7 +125,7 @@ public class ParadigmServiceImpl implements ParadigmService {
         // 判断是否已经选择了范式
         if (ParadigmConfig.PARADIGM == null && experiment_id != null && !experiment_id.trim().isEmpty())
             return false;
-        ExperimentProperties.EXPERIMENT_ID = experiment_id;
+        ExperimentProperties.experimentId = experiment_id;
         // 执行范式
         // 获取范式文件
         String filePath = ParadigmConfig.PARADIGM.getFilePath();

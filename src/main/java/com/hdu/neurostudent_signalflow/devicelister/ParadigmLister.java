@@ -87,8 +87,8 @@ public class ParadigmLister extends DeviceLister {
 
                     if (data[1] == 255.0){
                         // 结束标志，发送结束实验的请求
-                        if (ExperimentProperties.EXPERIMENT_ID != null)
-                            experimentClinet.endExperiment(ExperimentProperties.EXPERIMENT_ID);
+                        if (ExperimentProperties.experimentId != null)
+                            experimentClinet.endExperiment(ExperimentProperties.experimentId);
                         else
                             throw new RuntimeException("实验ID为空，无法结束实验");
                     }
