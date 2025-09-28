@@ -1,0 +1,38 @@
+#:kivy 2.0.0
+
+<ConfirmPopup>:	
+	
+	size_hint: .5, .3
+    auto_dismiss: False
+    title: 'WARNING'
+	title_size: "35dp"
+	title_color: root.label_color
+	separator_color: root.label_color
+    
+	BoxLayout:
+		orientation: "vertical"		
+		Label:
+			size_hint_y:0.6
+			text: root.text
+			font_size: "35dp"
+			text_size: self.size
+			valign: "middle"
+		BoxLayout:		
+			size_hint_y:0.4
+			spacing:20
+			Button:
+				text: root.cancel_text
+				font_size: "40dp"
+				on_press: root.cancel()
+				color: root.label_color
+				background_color: root.button_back_color
+				background_normal: ''
+				background_down: ''
+			Button:
+				text: root.ok_text
+				font_size: "40dp"
+				on_press: root.ok()       
+				color: root.label_color
+				background_color: root.button_back_color
+				background_normal: ''
+				background_down: ''

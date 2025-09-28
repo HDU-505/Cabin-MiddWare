@@ -26,7 +26,7 @@ public class DataOperator {
     private StringBuilder incompleteData = new StringBuilder();
     private BlockingQueue<String> queue;
 
-    @Autowired
+    @Resource
     private DataTransmitService dataTransmitService;
 
     //任务线程池
@@ -50,7 +50,6 @@ public class DataOperator {
 
     public void handleSendQueue(){
         dataTransmitService.setSendQueue(sendQueue);
-        Thread thread = new Thread(dataTransmitService);
-        thread.start();
+        dataTransmitService.start();
     }
 }

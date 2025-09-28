@@ -1,0 +1,197 @@
+#:kivy 2.0.0
+
+#:import Factory kivy.factory.Factory
+#:import path os.path
+
+#:set images_folder path.join("images")
+#:set orange (float(233)/255, float(147)/255, float(34)/255,1)
+#:set blueBS float(25)/255,float(63)/255,float(90)/255,1
+
+<SpinnerScaleLabel@ScaleLabel>:
+	font_size: "25dp"
+	text_size: self.size
+	halign:'right'
+	valign:'middle'
+
+<AcquireSpinnerOptions@SpinnerOption>:
+	font_size: "25dp"
+	background_normal: "images/blu_back_with_contour.png"
+	height: "60dp"
+
+<AcquireSpinner@Spinner>:
+    option_cls: Factory.AcquireSpinnerOptions
+    background_normal: "images/blu_back_with_arrow.png"
+	background_disabled_normal:''
+	background_down:'images/blu_back_with_arrow.png'
+    font_size: "25dp"
+	border:[0,0,0,0]
+
+<SignalRecorder>:
+	scope_graph : scope_graph
+	low_spinn : low_spinn
+	high_spinn : high_spinn
+	start_btn:start_btn
+	marker_btn:marker_btn
+	amplitude_spinn: amplitude_spinn
+    imp_btn:imp_btn
+    start_btn:start_btn
+	start_btn_image:start_btn_image
+    marker_btn:marker_btn
+    clr_btn:clr_btn
+    home_btn:home_btn
+	dev_bl:dev_bl
+	elapsed_time_label:elapsed_time_label
+
+	BoxLayout:
+		padding:5
+		spacing:5
+        orientation: "vertical"
+		canvas.before:
+			Color:
+				rgba: blueBS
+			Rectangle:
+				pos: self.pos
+				size: self.size
+		
+		BoxLayout:
+			size_hint_y:0.08
+			BoxLayout:
+				size_hint_x:0.5
+				ScaleLabel:
+					text: "ID: {}".format(root.sub_name)
+					font_size: "25dp"
+				AcquireButton:
+					text: "Run Name: {}".format(root.task)
+					font_size: "25dp"
+					on_press:root.open_taskName_popup()
+					color: 1,1,1,1
+					bold:False
+			BoxLayout:
+				size_hint_x:0.5
+				BoxLayout:
+					size_hint_x:root.external_dev_bl_lenght
+				BoxLayout:
+					id:dev_bl
+					size_hint_x:root.internal_dev_bl_lenght
+					spacing:5
+		OrangeSpacer:
+			size_hint_y: 0.001
+		BoxLayout:
+			size_hint_y:0.1
+			padding:5
+
+			BoxLayout:
+				size_hint_x:0.5
+				BoxLayout:
+					size_hint_x:0.24
+					SpinnerScaleLabel:
+						text: "HP"
+						# font_size: "19dp"
+					AcquireSpinner:
+						id:low_spinn
+						text: "1"		
+						values: ['0.1','1','2','3']
+						on_text: root.set_low_cutoff_filter()
+				BoxLayout:
+					size_hint_x:0.23
+					SpinnerScaleLabel:
+						text: "LP"
+						# font_size: "19dp"
+					AcquireSpinner:
+						id:high_spinn
+						text: "15"		
+						values: ['15','30','60']
+						on_text: root.set_high_cutoff_filter()
+				BoxLayout:
+					size_hint_x:0.33
+					SpinnerScaleLabel:
+						text: "Amp[uVpp]"
+						font_size: "19dp"
+					AcquireSpinner:
+						id: amplitude_spinn
+						text: "400"		
+						values: ['800','400','200','120','auto']
+						on_text: root.autoscale()
+				AcquireButton:
+					size_hint_x:0.2
+					id: imp_btn
+					on_press: app.root.send_impedance_check()
+					text:'Ω'
+					font_size:'40dp'
+					color:1,1,1,1
+					bold:False
+			OrangeSpacer:
+                size_hint_x: 0.003   
+			BoxLayout:
+				size_hint_x:0.5
+				AcquireButton:
+					size_hint_x:0.15
+					id: start_btn
+					on_press: app.root.send_start()
+					Image:
+						id:start_btn_image
+						size: self.parent.size[0],self.parent.size[1]
+						pos:self.parent.pos[0],self.parent.pos[1]
+						source: path.join(images_folder, "start_icon_2.png")
+				BoxLayout:
+					size_hint_x: 0.35
+					spacing: 10
+					padding: 10
+					Image:
+						size_hint_x: 0.4
+						size: self.parent.size[0],self.parent.size[1]
+						pos:self.parent.pos[0],self.parent.pos[1]
+						source: path.join(images_folder, "timer.png")
+					Label:
+						id:elapsed_time_label
+						text: '00:00:00'
+						size_hint_x: 0.6
+						color: (1,1,1,1)#([float(25)/255,float(63)/255,float(90)/255,1])
+						font_size: '28dp'
+                        text_size: self.size
+                        halign:'left'
+                        valign:'middle'
+
+				BoxLayout:
+					size_hint_x:0.2
+					spacing: 5
+					AcquireButton:
+						id:marker_btn
+						on_press: app.root.send_marker()
+						disabled: True
+						Image:
+							size: self.parent.size[0],self.parent.size[1]
+							pos:self.parent.pos[0],self.parent.pos[1]
+							source: path.join(images_folder, "marker_icon_4.png")
+					Label:
+						text:str(root.marker_number)
+						font_size: "35dp"
+						color: (1,1,1,1)#([float(25)/255,float(63)/255,float(90)/255,1])
+                        text_size: self.size
+                        halign:'left'
+                        valign:'middle'
+
+				AcquireButton:
+					size_hint_x:0.15
+					id: clr_btn
+					on_press: root.clear_plots()
+					Image:
+						size: self.parent.size[0],self.parent.size[1]
+						pos:self.parent.pos[0],self.parent.pos[1]
+						source: path.join(images_folder, "eraser.png")
+				
+				AcquireButton:
+					size_hint_x:0.15
+					id: home_btn
+					on_press: app.root.back_home_from_sr()
+					Image:
+						size: self.parent.size[0],self.parent.size[1]
+						pos:self.parent.pos[0],self.parent.pos[1]
+						source: path.join(images_folder, "Home_icon.png")
+		BoxLayout:
+			id: scope_graph
+			size_hint_y:0.82
+
+
+
+

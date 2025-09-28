@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<root>
+	<channels>
+		<AFz>
+			<nr>1</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>True</eog>
+		</AFz>
+		<F3>
+			<nr>2</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>False</eog>
+		</F3>
+		<F4>
+			<nr>3</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>False</eog>
+		</F4>
+		<Pz>
+			<nr>4</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>False</eog>
+		</Pz>
+		<P3>
+			<nr>5</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>False</eog>
+		</P3>
+		<P4>
+			<nr>6</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>False</eog>
+		</P4>
+	</channels>
+</root>

@@ -46,8 +46,7 @@ public class GazePointDeviceAdapter extends Device implements DeviceAdapter{
 
             // 数据转发
             dataTransmitService.setSendQueue(sendQuue);
-            Thread thread = new Thread(dataTransmitService);
-            thread.start();
+            dataTransmitService.start();
         }catch (Exception e){
             e.printStackTrace();
             logger.error("[3-4-1]:gazepoint适配器数据转换出现异常...");

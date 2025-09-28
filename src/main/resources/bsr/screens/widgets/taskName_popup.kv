@@ -1,0 +1,46 @@
+#:kivy 2.0.0
+
+<TaskName>:
+    size_hint:0.4,0.4
+    title:"Select a name for the run"
+	separator_color: float(233)/255, float(147)/255, float(34)/255,1
+
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows:3
+        cols:3
+        spacing: 10
+        padding: 10
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "EyesOpen"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "EyesClosed"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "Task"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "EasyWL"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "HardWL"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "StressCal"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "Workload"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "Cooperation"
+            # font_size: "20dp"
+        AcquireButton:
+            on_press: root.set_run_name(self.text)
+            text: "Stress"

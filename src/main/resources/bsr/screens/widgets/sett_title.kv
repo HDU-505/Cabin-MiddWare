@@ -1,0 +1,18 @@
+#:kivy 2.0.0
+
+<SettTitle@Label>:
+    text_size: self.width - 32, None
+    size_hint_y: None
+    height: max(dp(20), self.texture_size[1] + dp(20))
+    color: (float(233)/255, float(147)/255, float(34)/255, 1)
+    font_size: '35dp'
+	italic: True
+	bold: True
+	halign: 'right'
+    canvas:
+        Color:
+            rgba: .15, .15, .15, .5
+
+        Rectangle:
+            pos: self.x+5, self.y + 5
+            size: self.width-10, self.height - 10

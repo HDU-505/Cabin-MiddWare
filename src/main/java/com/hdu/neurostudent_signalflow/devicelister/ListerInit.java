@@ -1,5 +1,7 @@
 package com.hdu.neurostudent_signalflow.devicelister;
 
+import com.hdu.neurostudent_signalflow.devicelister.mindtooth.MindToothDeviceLister;
+import com.hdu.neurostudent_signalflow.devicelister.paradigm.ParadigmLister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -37,8 +39,8 @@ public class ListerInit implements CommandLineRunner {
         Thread mindtoothThread = new Thread(mindToothDeviceLister);
         mindtoothThread.start();
         //启动label监听程序
-        Thread paradigmThread = new Thread(paradigmLister);
-        paradigmThread.start();
+//        Thread paradigmThread = new Thread(paradigmLister);
+//        paradigmThread.start();
     }
 
 }

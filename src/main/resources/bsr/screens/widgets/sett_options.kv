@@ -1,0 +1,54 @@
+#:kivy 2.0.0
+
+<SettOptions>:
+    size_hint_y: None
+    height: labellayout.size[1]# + dp(25)
+    sett_button:sett_button
+
+    BoxLayout:
+        pos: root.pos
+        Label:
+            size_hint_x: .5
+            id: labellayout
+            markup: True
+            text: u'{0}\n[size=18sp][color=999999]{1}[/color][/size]'.format(root.title or '', root.desc or '')
+			font_size: '25dp'
+            text_size: self.width - 32, None
+			valign: 'middle'
+			halign: 'left'            
+        Button:
+            id: sett_button
+            size_hint_x: .5
+            text: root.value or ''
+            color: [1,1,1,1]
+            pos: root.pos
+            font_size: '25dp'
+            background_normal: ''
+            background_down: ''
+            background_disabled_normal:''
+            background_disabled_down:''
+            background_color: [0,0,0,0]
+            on_press: root.create_popup()
+
+<SettOptionsPopup>:
+
+    ad_bl:ad_bl
+    title_size:'30dp'
+    separator_color:[float(233)/255, float(147)/255, float(34)/255,1]
+    size_hint: None,None
+    background_color: [float(25)/255,float(63)/255,float(90)/255,1]
+    background: '' 
+    title:''
+    
+    BoxLayout:
+        orientation:'vertical'
+        spacing: 5
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                id:ad_bl
+                spacing:3
+                Widget:
+                    size_hint_y:None
+                    height:1

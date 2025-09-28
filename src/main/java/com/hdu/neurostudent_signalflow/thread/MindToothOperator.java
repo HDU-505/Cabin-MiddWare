@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.hdu.neurostudent_signalflow.config.DataTypeProperties;
 import com.hdu.neurostudent_signalflow.config.MindToothProperties;
 import com.hdu.neurostudent_signalflow.entity.UnifyData;
-import com.hdu.neurostudent_signalflow.service.DataTransmitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,25 +29,38 @@ public class MindToothOperator {
     private BlockingQueue<String> sendQueue;
     private MindToothProperties mindToothProperties;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    private DataTransmitService dataTransmitService;
 
     int num = 0;
 
-    public MindToothOperator(BlockingQueue<String> sendQueue,MindToothProperties mindToothProperties,DataTransmitService dataTransmitService) {
-        this.sendQueue = sendQueue;
-        this.mindToothProperties = mindToothProperties;
-        this.dataTransmitService = dataTransmitService;
-        logger.info("mindtooth处理启动");
+    @PostConstruct
+    private void init() {
+        if (mindToothProperties.isTestEnable()) {
+            // 删除原来的测试文件
+            Path path = Paths.get(mindToothProperties.getTestOutputFile() + Thread.currentThread().getName() + ".txt");
+
+            try {
+                Files.deleteIfExists(path);
+                logger.info("mindtooth测试文件删除成功!");
+            } catch (IOException e) {
+                logger.error("mindtooth测试文件删除失败: {}", e.getMessage());
+            }
+        }
     }
 
 
+    public MindToothOperator(BlockingQueue<String> sendQueue,MindToothProperties mindToothProperties) {
+        this.sendQueue = sendQueue;
+        this.mindToothProperties = mindToothProperties;
+        logger.info("mindtooth处理启动");
+    }
 
     public void EEGData2UnifyData(double[] sig_data) {
         try {
-            //                        logger.info("[当前处理线程：]"+Thread.currentThread());
-
-//            logger.info("[当前处理线程：]"+ num++ + "   "+Thread.currentThread()+"处理的数据序号为："+ sig_data[sig_data.length-1]);
-
+            logger.info("[当前处理线程：]"+Thread.currentThread());
+            logger.info("[当前处理线程：]"+ num++ + "   "+Thread.currentThread()+"处理的数据序号为："+ sig_data[sig_data.length-1]);
+            if (mindToothProperties.isTestEnable()) {
+                writeData2TestFile(sig_data);
+            }
 
             // 处理数据逻辑
             int size = sig_data.length;
@@ -57,7 +74,6 @@ public class MindToothOperator {
 
             mindTooth.data = dataList.subList(0, size - 2);
             String timestamp_temp = String.format("%.0f", sig_data[size - 1]);
-//                        System.out.println(Arrays.toString(sig_data));
 
             // 转换时间戳
             mindTooth.setTimeStamp(timestamp_temp);
@@ -72,11 +88,31 @@ public class MindToothOperator {
             // 转换成JSON格式
             String mintoothJson = JSON.toJSONString(mindTooth);
             // 加入到发送队列中
-            dataTransmitService.DataTran(mintoothJson);
+            sendQueue.put(mintoothJson);
         } catch (Exception e) {
             // 处理线程中断异常
             Thread.currentThread().interrupt();
             logger.error("处理线程被中断", e);
+        }
+    }
+
+    private void writeData2TestFile(double[] data) {
+        Path path = Paths.get(mindToothProperties.getTestOutputFile() + Thread.currentThread().getName() + ".txt");
+
+        try {
+            Files.createDirectories(path.getParent());
+            if (!Files.exists(path)) {
+                Files.createFile(path);
+                logger.info("mindtooth测试文件创建成功!");
+            }
+        } catch (IOException e) {
+            logger.error("mindtooth测试文件创建失败: {}", e.getMessage());
+        }
+
+        try {
+            Files.writeString(path, Arrays.toString(data) + System.lineSeparator(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            logger.error("mindtooth测试文件写入失败: {}", e.getMessage());
         }
     }
 

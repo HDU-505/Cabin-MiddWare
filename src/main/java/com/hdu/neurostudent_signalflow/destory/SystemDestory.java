@@ -1,6 +1,6 @@
 package com.hdu.neurostudent_signalflow.destory;
 
-import com.hdu.neurostudent_signalflow.devicelister.MindToothEnvInit;
+import com.hdu.neurostudent_signalflow.devicelister.mindtooth.MindToothEnvInit;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;

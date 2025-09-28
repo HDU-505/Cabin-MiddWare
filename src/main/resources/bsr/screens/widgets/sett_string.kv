@@ -1,0 +1,64 @@
+#:kivy 2.0.0
+
+<SettString>:
+    size_hint_y: None
+    height: labellayout.size[1]# + dp(25)
+    sett_button:sett_button
+
+    BoxLayout:
+        pos: root.pos
+        Label:
+            size_hint_x: .5
+            id: labellayout
+            markup: True
+            text: u'{0}\n[size=18sp][color=999999]{1}[/color][/size]'.format(root.title or '', root.desc or '')
+			font_size: '25dp'
+            text_size: self.width - 32, None
+			valign: 'middle'
+			halign: 'left'            
+        Button:
+            id: sett_button
+            size_hint_x: .5
+            text: root.value or ''
+            color: [1,1,1,1]
+            pos: root.pos
+            font_size: '25dp'
+            background_normal: ''
+            background_down: ''
+            background_disabled_normal:''
+            background_disabled_down:''
+            background_color: [0,0,0,0]
+            on_press: root.create_popup()
+
+
+<SettStringPopup>:
+
+    ok_btn:ok_btn
+    txt_input:txt_input
+    title_size:'23dp'
+    separator_color:[float(233)/255, float(147)/255, float(34)/255,1]
+    size_hint: (.5, .25)
+    background_color: [float(25)/255,float(63)/255,float(90)/255,1]
+    background: '' 
+    title:''
+    
+    BoxLayout:
+        orientation:'vertical'
+        spacing: 5
+
+        IDTextInput:
+            id:txt_input
+            font_size:'25dp'
+            multiline:False
+            size_hint_y:0.5
+            text:''
+        BoxLayout:
+            size_hint_y:0.5
+            Button:
+                id:ok_btn
+                text:'Ok'
+                font_size:"25dp"
+            Button:
+                text:'Cancel'
+                font_size:"25dp"
+                on_release:root.dismiss()

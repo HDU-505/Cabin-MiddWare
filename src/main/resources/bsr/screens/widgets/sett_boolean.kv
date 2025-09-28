@@ -1,0 +1,28 @@
+#:kivy 2.0.0
+
+<SettBoolean>:
+    size_hint_y: None
+    height: labellayout.size[1] #+ dp(25)
+    check:check
+    labellayout:labellayout
+
+    BoxLayout:
+        size_hint_y:None
+        pos: root.pos
+        Label:
+            size_hint_x: .5
+            id: labellayout
+            markup: True
+            text: u'{0}\n[size=18sp][color=999999]{1}[/color][/size]'.format(root.title or '', root.desc or '')
+			font_size: '25dp'
+            text_size: self.width - 32, None
+			valign: 'middle'
+			halign: 'left'
+        CheckBox:
+            id:check
+            size_hint_x: .5  
+            pos: root.pos
+            active: bool(root.values.index(root.value)) if root.value in root.values else False
+            color:[float(233)/255, float(147)/255, float(34)/255,1] 
+			on_press: root.enable_something()
+            active:root.check_active

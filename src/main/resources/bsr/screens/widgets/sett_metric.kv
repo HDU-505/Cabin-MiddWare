@@ -1,0 +1,117 @@
+#:kivy 2.0.0
+
+<MetricButton@MDTextButton>:
+	font_size: '25dp'
+	background_normal: ''
+	background_down: ''
+	background_disabled_normal:''
+	background_disabled_down:''
+	background_color: [0,0,0,0]
+	color: [1,1,1,1]
+    valign: 'middle'
+    halign: 'center'
+
+<SettOptionsMetricPopup>:
+
+    ad_bl:ad_bl
+    title_size:'25dp'
+    separator_color:[float(233)/255, float(147)/255, float(34)/255,1]
+    size_hint: None,None
+    background_color: [float(25)/255,float(63)/255,float(90)/255,1]
+    background: '' 
+    title:''
+    
+    BoxLayout:
+        orientation:'vertical'
+        spacing: 5
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                id:ad_bl
+                spacing:3
+                Widget:
+                    size_hint_y:None
+                    height:1
+
+<SettMultiOptionsMetricPopup>:
+
+    ad_bl:ad_bl
+    done_btn:done_btn
+    title_size:'25dp'
+    separator_color:[float(233)/255, float(147)/255, float(34)/255,1]
+    size_hint: None,None
+    background_color: [float(25)/255,float(63)/255,float(90)/255,1]
+    background: '' 
+    title:''
+    
+    BoxLayout:
+        orientation:'vertical'
+        spacing: 5
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                id:ad_bl
+                spacing:3
+                Widget:
+                    size_hint_y:None
+                    height:1
+        SettSpacer:        
+        Button:
+            id:done_btn
+            text:'Done'
+            size_hint_y:None 
+            height:dp(45)
+
+
+<SettMetric>:
+    size_hint_y: None
+    height: labellayout.size[1]# + dp(25)
+	check:check
+    feat_btn:feat_btn
+	method_btn:method_btn
+	ch_btn:ch_btn
+
+    BoxLayout:
+        pos: root.pos
+        ScaleLabel:
+            size_hint_x: .2
+            id: labellayout
+            markup: True
+            text: root.metric_name
+			font_size: '30dp'
+            # text_size: self.width - 32, None
+			valign: 'middle'
+			halign: 'center'   
+        CheckBox:
+            id:check
+            size_hint_x: .1  
+            pos: root.pos
+            #active: bool(root.values.index(root.value)) if root.value in root.values else False
+            on_press: root.enable_metric()
+            color:[float(233)/255, float(147)/255, float(34)/255,1]          
+        MetricButton:
+            id: method_btn
+            size_hint_x: .2
+            size_hint_y: 1
+            text: root.method_value or ''
+            pos: root.pos
+            on_press: root.open_method_popup()
+            disabled: True
+        MetricButton:
+            id: feat_btn
+            size_hint_x: .3
+            size_hint_y: 1
+            text: root.feat_value or ''
+            pos: root.pos
+            on_press: root.open_feat_popup()
+            disabled: True
+        MetricButton:
+            id: ch_btn
+            size_hint_x: .2
+            size_hint_y: 1
+            text: root.ch_value or ''
+            pos: root.pos
+            on_press: root.open_channel_popup()
+            disabled: True

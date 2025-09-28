@@ -1,7 +1,9 @@
 package com.hdu.neurostudent_signalflow.config;
 
 import com.hdu.neurostudent_signalflow.utils.mqtt.MqttAcceptClient;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -11,21 +13,9 @@ import org.springframework.context.annotation.Configuration;
  * @Author : DZL
  * @Date : 2023/10/26 16:35
  */
-//@Configuration
-//public class MqttConfig {
-//
-//    @Autowired
-//    private MqttAcceptClient mqttAcceptClient;
-//
-//    /**
-//     * 订阅mqtt
-//     *
-//     * @return
-//     */
-//    @Conditional(MqttCondition.class)
-//    @Bean
-//    public MqttAcceptClient getMqttPushClient() {
-//        mqttAcceptClient.connect();
-//        return mqttAcceptClient;
-//    }
-//}
+@Configuration
+@ConfigurationProperties("mqtt")
+@Data
+public class MqttConfig {
+    private boolean mqttEnabled;
+}

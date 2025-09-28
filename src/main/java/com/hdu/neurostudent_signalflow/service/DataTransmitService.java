@@ -9,10 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /*
  * 数据转发服务
@@ -20,59 +17,40 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @Scope("prototype")
-public class DataTransmitService implements Runnable {
+public class DataTransmitService {
     private static final Logger logger = LoggerFactory.getLogger(DataTransmitService.class);
 
     @Resource
-    MqttSendClient mqttSendClient;
+    private MqttSendClient mqttSendClient;
 
     @Resource
     private MindtoothWebSocketClient mindtoothWebSocketClient;
 
-    // 发送队列
     @Setter
     private BlockingQueue<String> sendQueue;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ExecutorService consumer = Executors.newSingleThreadExecutor();
 
-    // 启动定时任务
     public void start() {
-        if (sendQueue.isEmpty()) {
-            return;
-        }
-
-        while (!sendQueue.isEmpty()) {
-            try {
-                DataTran(sendQueue.take());
-            } catch (InterruptedException e) {
-                logger.error("发送队列取出出现问题", e);
-                Thread.currentThread().interrupt(); // 重置中断状态
-                return;
+        consumer.submit(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    String data = sendQueue.take();
+                    DataTran(data);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
-        }
+        });
     }
 
-    // 停止定时任务
     public void stop() {
-        scheduler.shutdown();
-        try {
-            if (!scheduler.awaitTermination(60, TimeUnit.SECONDS)) {
-                scheduler.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            scheduler.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
+        consumer.shutdownNow();
     }
 
-    // 数据转发函数
-    public void DataTran(String data) {
+    private void DataTran(String data) {
         mqttSendClient.publish(false, "test", data);
-    }
-
-    @Override
-    public void run() {
-        logger.info("开启定时任务");
-        scheduler.scheduleAtFixedRate(this::start, 0, 100, TimeUnit.MILLISECONDS);
+        mindtoothWebSocketClient.send(data);
     }
 }

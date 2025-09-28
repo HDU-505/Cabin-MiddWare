@@ -1,0 +1,21 @@
+#:kivy 2.0.0
+
+<ProgressBarLayout>:
+	
+	pb:pb
+	pb_lab: pb_lab
+	BoxLayout:
+		size: root.size
+		pos: root.pos
+		orientation: "vertical"		
+		Label:
+			id: pb_lab
+			size_hint_y:0.6
+			text: root.info
+			font_size: "25dp"
+			#size: self.size
+			text_size: self.size
+			#valign: "middle"
+		OrangeProgressBar:
+			id: pb		
+			size_hint_y:0.4

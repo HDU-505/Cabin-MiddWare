@@ -1,0 +1,18 @@
+#:kivy 2.0.0
+
+#:set orange (float(233)/255, float(147)/255, float(34)/255,1)
+
+<AcquireButton>:
+	color: orange
+	background_color: (0,0,0,0)
+	background_normal: ''
+	bold:True
+	font_size: "25dp"
+	canvas.before:
+		Color:
+			rgba: self.back_color
+		RoundedRectangle:
+			size:self.size
+			pos:self.pos
+			radius:[18]
+    on_press: root.pressed_effect() 

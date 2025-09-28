@@ -1,0 +1,61 @@
+#:kivy 2.0.0
+
+<ImpedancePopup>:
+	size_hint: .5, .8
+    auto_dismiss: False
+    title: 'Impedance Check in Progress'
+	title_size: "30dp"
+	separator_color: float(233)/255, float(147)/255, float(34)/255,1
+	background: "images/blu_back.png" 
+	channel_bl:channel_bl
+
+	BoxLayout:
+		orientation:'vertical'
+		spacing:10
+		padding:5
+		BoxLayout:
+			size_hint_y:0.1
+			Label:
+				size_hint_x: 0.5
+				text: 'Channel Name'
+				font_size: "30dp"
+				# text_size: self.size
+				# valign: "middle"
+			Label:
+				size_hint_x: 0.5
+				text: 'Impedance [KΩ]'
+				font_size: "30dp"
+				# text_size: self.size
+				# valign: "middle"
+		BoxLayout:
+			orientation:'vertical'
+			id:channel_bl
+		Widget:
+			canvas:
+				Color:
+					rgba: (float(233)/255, float(147)/255, float(34)/255,1)
+				Rectangle:
+					pos: self.x, self.y
+					size: self.width, self.height
+			size_hint_y:0.005
+		BoxLayout:
+			size_hint_y:0.12
+			spacing:5
+			Button:
+				size_hint_x:0.4
+				text: 'Save'
+				font_size: "30dp"
+				background_color: (0,0,0.4,0.5)
+				on_press: app.root.save_impedances()
+				italic: True
+				bold: True
+				color: 1,1,1,1
+			Button:
+				size_hint_x:0.4
+				text: 'Back'
+				font_size: "30dp"
+				background_color: (0,0,0.4,0.5)
+				on_press: app.root.stop_impedance_check()
+				italic: True
+				bold: True
+				color: 1,1,1,1

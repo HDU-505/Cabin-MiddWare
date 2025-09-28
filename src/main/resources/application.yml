@@ -3,6 +3,7 @@ server:
   port: 8888
 # MQTT配置
 mqtt:
+  mqttEnabled: false  # 是否启用
   hostUrl: tcp://127.0.0.1:1883
   username: admin
   password: admin
@@ -18,6 +19,7 @@ mqtt:
 
 #MindTooth配置
 mindtooth:
+  enabled: true
   impedance_name: 101409-1002_Impedance
   data_name: 101409-1002_EEG
   impedance_id: 0
@@ -25,7 +27,14 @@ mindtooth:
   sampeRate: 125
   dataChannels: 8
   impChannels: 10
+  processThread: 5
   impedance_or_data: 1
+  max_retry_count: 5
+  python_path: "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\src\\main\\resources\\SDK\\EegAmpApp\\startPython.bat"
+  sdk_path: "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\src\\main\\resources\\SDK\\EegAmpApp\\startEegAmpApp.bat"
+  testEnable: true
+  testInputFile: "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\src\\main\\resources\\testData\\testInputData.txt"
+  testOutputFile: "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\src\\main\\resources\\testData\\testOutputData"
 
 # 日志配置
 logging:
@@ -50,3 +59,8 @@ music:
 gazepoint:
   host: 127.0.0.1
   port: 4242
+
+# 范式相关配置
+paradigm:
+  enabled: true
+  write2File: false

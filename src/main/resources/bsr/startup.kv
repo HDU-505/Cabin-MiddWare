@@ -1,0 +1,120 @@
+#:kivy 1.11.1
+
+Home:
+<Home>:
+    orientation: "vertical"
+    
+    Image:
+        id: gif
+        source: 'BS_reader_5.zip'
+        #center: self.parent.center
+        size: self.size
+        #pos: self.parent.pos
+        #size: 500, 500
+        allow_stretch: False
+        keep_ratio: False
+        anim_delay: 0.04
+        anim_loop: 0
+        size_hint_y:0.8
+    Label:
+    	canvas.before:
+        	Color:
+            	rgba: 1,1,1,1
+        	Rectangle:
+            	pos: self.pos
+            	size: self.size     	
+    	
+    	text: root.error_lab
+    	size_hint_y:0.2
+    	color: 0,0,0,1
+
+<ErrorPopup_SH>:	
+	
+	size_hint: .9, .9
+    auto_dismiss: True
+    title: 'Error while pairing with Shimmer!'
+    title_color: 1,0,0,1
+	title_size: "15dp"
+	separator_color: float(233)/255, float(147)/255, float(34)/255,1
+	#background: "images/blu_back.png" 
+	ok_btn:ok_btn
+	
+	BoxLayout:
+		#size_hint_y: None
+		#height: sp(48)
+		orientation: "vertical"
+		
+		Label:
+			size_hint_y: 0.65
+			text: root.instructions
+			font_size: "18dp"
+			halign: 'left'
+			#text: 'Check the configuration file. /n Power Off/On the device and press OK'.format()
+		
+		Button:
+			id:ok_btn
+			size_hint_y: 0.35
+			text: root.ok_text
+			#font_size: "40dp"
+			#background_normal: "images/blu_back_with_contour.png"
+			#on_press: root.on_ok()
+
+			
+<ErrorPopup_LA>:	
+	
+	size_hint: .9, .9
+    auto_dismiss: True
+    title: '连接脑电设备时错误!'
+    title_color: 1,0,0,1
+	title_size: "15dp"
+	#separator_color: float(40)/255, float(40)/255, float(40)/255,1
+	#background: "images/blu_back.png" 
+	
+	BoxLayout:
+		#size_hint_y: None
+		#height: sp(60)
+		orientation: "vertical"
+		
+		Label:
+			size_hint_y: 0.65
+			text: root.instructions
+			font_size: "14dp"
+			color: 0,0,0,1
+			halign: 'left'
+			#text: 'Check the configuration file. /n Power Off/On the device and press OK'.format()
+		
+		Button:
+			size_hint_y: 0.2
+			text: root.ok_text
+			font_size: "12dp"
+			background_normal: "images/blu_back_with_contour.png"
+			on_press: root.ok()
+
+<ErrorPopup_Muse>:	
+	
+	size_hint: .9, .9
+    auto_dismiss: True
+    title: 'Error while pairing with Muse!'
+    title_color: 1,0,0,1
+	title_size: "15dp"
+	separator_color: float(233)/255, float(147)/255, float(34)/255,1
+	#background: "images/blu_back.png" 
+	
+	BoxLayout:
+		#size_hint_y: None
+		#height: sp(48)
+		orientation: "vertical"
+		
+		Label:
+			size_hint_y: 0.65
+			text: root.instructions
+			font_size: "18dp"
+			halign: 'left'
+			#text: 'Check the configuration file. /n Power Off/On the device and press OK'.format()
+		
+		Button:
+			size_hint_y: 0.35
+			text: root.ok_text
+			#font_size: "40dp"
+			#background_normal: "images/blu_back_with_contour.png"
+			on_press: root.ok()

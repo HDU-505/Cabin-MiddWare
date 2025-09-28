@@ -1,0 +1,491 @@
+#:kivy 1.0
+
+<Home>:
+    canvas.before:
+        Color:
+			rgba: float(25)/255,float(63)/255,float(90)/255,1
+            #rgb: 1,1,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    FloatLayout:
+        id:fl
+        size_hint_x: None
+        width: '150dp'
+        GridLayout:
+            pos: root.pos
+            cols: 1
+            padding: 10
+            spacing: 10
+            SettButton:
+                text: 'General'
+                pos: fl.x + dp(10), fl.y + dp(10)
+                width: fl.width - dp(20)
+                on_press: root.go_to_general()
+
+            SettButton:
+                text: 'LiveAmp'
+                pos: fl.x + dp(10), fl.y + dp(10)
+                width: fl.width - dp(20)
+                on_press: root.go_to_liveamp()
+            SettButton:
+                text: 'Touch'
+                pos: fl.x + dp(10), fl.y + dp(10)
+                width: fl.width - dp(20)
+                on_press: root.go_to_touch()
+            SettButton:
+                text: 'Muse'
+                pos: fl.x + dp(10), fl.y + dp(10)
+                width: fl.width - dp(20)
+                on_press: root.go_to_muse()
+            SettButton:
+                text: 'Shimmer'
+                pos: fl.x + dp(10), fl.y + dp(10)
+                width: fl.width - dp(20)
+                on_press: root.go_to_shimmer()
+            SettButton:
+                text: 'Empatica'
+                pos: fl.x + dp(10), fl.y + dp(10)
+                width: fl.width - dp(20)
+                on_press: root.go_to_empatica()
+            # SettButton:
+            #     text: 'Fake'
+            #     pos: fl.x + dp(10), fl.y + dp(10)
+            #     width: fl.width - dp(20)
+            #     on_press: root.go_to_fake()
+
+        SettButton:
+            text: 'Close'
+            pos: fl.x + dp(10), fl.y + dp(10)
+            width: fl.width - dp(20)
+            on_press: root.write_config_xml()
+
+    BoxLayout:
+        canvas:
+            Color:
+                rgba: [float(233)/255, float(147)/255, float(34)/255,1]
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        size_hint_x: None
+        width: 3
+
+
+<General>:
+
+    name: 'general'
+    debug:debug
+    user:user
+    fullscreen:fullscreen
+    device:device
+    keyboard:keyboard
+    eeg:eeg
+    eeg_dev:eeg_dev
+    gsr:gsr
+    gsr_dev:gsr_dev
+    ppg:ppg
+    ppg_dev:ppg_dev
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'BSR General Configuration'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                SettBoolean:
+                    id:debug
+                    title: 'Debug'
+                    desc: 'If you are debbuging or running a fake demo set this flag to ON'
+                SettSpacer:
+                SettOptions:
+                    id:user
+                    options: ['master','slave']
+                    value: 'master'
+                    title: 'User'
+                    desc: 'Select Slave only if you have two BSR the has to be synchronized'
+                SettSpacer:
+                SettBoolean:
+                    id:fullscreen    
+                    title: 'Fullscreen'
+                    desc: 'If checked the BSR will start in fullescreen mode, otherwise above the toolbar'
+                SettSpacer:
+                SettOptions:
+                    id: device
+                    options: ['laptop','tablet']
+                    value:'laptop'
+                    title: 'Device'
+                    desc: 'Select the device which BSR will run on'
+                SettSpacer:
+                SettOptions:
+                    id:keyboard
+                    options: ['system','dock']
+                    value:'system'
+                    title: 'Keyboard'
+                    desc: 'Select dock if you are using a tablet without physical keyboard'
+                SettSpacer:
+                SettBoolean:
+                    id:eeg
+                    title: 'EEG'
+                    desc: 'Check if you want to record EEG signal'
+                SettSpacer:
+                SettOptions:
+                    id:eeg_dev
+                    title: 'EEG Amplifier'
+                    desc: 'Select the amplfier for EEG recording'
+                    options: ['liveAmp','touch','muse']
+                    value: 'liveAmp'
+                SettSpacer:
+                SettBoolean:
+                    id:gsr
+                    title: 'GSR'
+                    desc: 'Check if you want to record GSR signal'
+                SettSpacer:
+                SettOptions:
+                    id:gsr_dev
+                    title: 'GSR Amplifier'
+                    desc: 'Select the amplfier for GSR recording'
+                    options: ['shimmer','empatica']
+                    value: 'shimmer'
+                SettSpacer:
+                SettBoolean:
+                    id:ppg                  
+                    title: 'PPG'
+                    desc: 'Check if you want to record PPG signal'
+                SettSpacer:
+                SettOptions:
+                    id:ppg_dev
+                    title: 'PPG Amplifier'
+                    desc: 'Select the amplfier for PPG recording'
+                    options: ['shimmer','empatica','muse']
+                    value: 'shimmer'
+
+
+<LiveAmp>:
+    la_ser_opt:la_ser_opt
+    la_fs_opt:la_fs_opt
+    la_bs_opt:la_bs_opt
+    la_ch_opt:la_ch_opt
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Live Amp Configuration'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                SettOptions:
+                    id:la_ser_opt
+                    options: ["055602-0332","054206-0121","056311-0611"]
+                    value: "055602-0332"
+                    
+                    title: 'LiveAmp Serial Number'
+                    desc: 'Select the serial number of the LiveAmp (on the back side of the amplifier)'
+                SettSpacer:
+                SettOptions:
+                    id:la_fs_opt
+                    options: ["250","500"]
+                    value:'250'
+                    
+                    title: 'LiveAmp Sampling Rate'
+                    desc: 'Select Live Amp Sampling Rate'
+                SettSpacer:
+                SettOptions:
+                    id:la_bs_opt
+                    options: ["25","50"]
+                    value:'25'
+                    
+                    title: 'LiveAmp Block Size'
+                    desc: 'Select Live Amp Block Size'
+                SettSpacer:
+                LAChOpt:
+                    id:la_ch_opt
+                    
+                    title: 'LiveAmp Channel Names'
+                    desc: 'Select all the EEG channels you want to record'
+                SettSpacer:
+
+<Touch>:
+    th_ser_opt:th_ser_opt
+    th_fs_opt:th_fs_opt
+    th_bs_opt:th_bs_opt
+    th_ch_opt:th_ch_opt
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Touch Configuration'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                SettOptions:
+                    id:th_ser_opt
+                    options: ["101402-0001","101402-0002","101402-0003","101402-0004","101402-0005","101409-1001","101409-1002","101409-1003","101409-1004","101409-1005","101409-1006","101409-1007","101409-1008","101409-1009","101409-1010","101409-1011","101409-1012"]
+                    value: "101402-0001"
+                    title: 'Touch Serial Number'
+                    desc: 'Select the serial number of the Touch (on the back side of the amplifier)'
+                SettSpacer:
+                SettOptions:
+                    id:th_fs_opt
+                    options: ["125","250"]
+                    value:'125'
+                    title: 'Touch Sampling Rate'
+                    desc: 'Select Touch Sampling Rate'
+                SettSpacer:
+                SettOptions:
+                    id:th_bs_opt
+                    options: ["25"]
+                    value:'25'
+                    title: 'Touch Block Size'
+                    desc: 'Select Touch Block Size'
+                SettSpacer:
+                THChOpt:
+                    id:th_ch_opt
+                    title: 'Touch Channel Names'
+                    desc: 'Select all the EEG channels you want to record'
+                SettSpacer:
+
+<Muse>:
+    mu_ser_opt:mu_ser_opt
+    mu_ch_opt:mu_ch_opt
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Muse Configuration'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                SettOptions:
+                    id:mu_ser_opt
+                    
+                    title: 'Muse Serial Number'
+                    desc: 'Select the serial number of the Muse (on the inner left side of the amplifier)'
+                    options: ["Muse-70F8","Muse-4B04","Muse-7673","MuseS-2B01","MuseS-3FF3","MuseS-407E","MuseS-40EF","MuseS-3143","MuseS-326E","MuseS-4080","MuseS-407D","MuseS-40BA","MuseS-405B","MuseS-3EC0","MuseS-329E","MuseS-3235"]
+                    value: '70F8'                
+                SettSpacer:
+                MuChOpt:
+                    id:mu_ch_opt
+                    
+                    title: 'Muse Channel Names'
+                    desc: 'Select all the EEG channels you want to record'
+                SettSpacer:
+
+<Shimmer>:
+    sh_ser_opt:sh_ser_opt
+    sh_fs_opt:sh_fs_opt
+    # ppg:ppg
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Shimmer Configuration'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                SettOptions:
+                    id:sh_ser_opt
+                    
+                    title: 'Shimmer Serial Number'
+                    desc: 'Select the serial number of the Shimmer (on the back side of the amplifier)'
+                    options: ["91FF","8CF8","F5BD","CCD2","8B5D","8DF9","F57B","8E28","CF0D","0FB5","8B52"]
+                    value: '91FF'
+                SettSpacer:
+                SettOptions:
+                    id:sh_fs_opt
+                    
+                    title: 'Shimmer Sampling Rate'
+                    desc: 'Select Shimmer Sampling Rate'
+                    options : ["51.2","64","102.4","128"]
+                    value: '64'
+                SettSpacer:
+
+<Empatica>:
+    em_ser_opt:em_ser_opt
+    # em_ppg:em_ppg
+    gui:gui
+
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Empatica Configuration'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                SettOptions:
+                    id:em_ser_opt
+                    options: ["A0069F","A00841","A00641","A02766","A02983","A02D56","A03740","A0377A","A0326E","A02D0D","A02FA1","A02648","A03685","A03859","A03922","A0382A"]
+                    value: 'A0069F'
+                    title: 'Empatica Serial Number'
+                    desc: 'Select the serial number of the Empatica (inner part of the bracelet )'
+                SettSpacer:
+                SettBoolean:
+                    id:gui
+                    title: 'GUI'
+                    desc: 'Check if you plan to use the E4 streaming server GUI'
+                SettSpacer:
+
+<Fake>:
+    fk_eeg:fk_eeg
+    fk_ch_opt:fk_ch_opt
+    fk_gsr:fk_gsr
+    fk_ppg:fk_ppg
+    
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Fake App Configuration'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                SettBoolean:
+                    id:fk_eeg
+                    
+                    title: 'EEG'
+                    desc: 'Check if you want to stream EEG signal'
+                FKChOpt:
+                    id:fk_ch_opt
+                    
+                    title: 'EEG Channel Names'
+                    desc: 'Select all the EEG channels you want to stream'
+                SettBoolean:
+                    id:fk_gsr
+                    
+                    title: 'GSR'
+                    desc: 'Check if you want to stream GSR signal'
+                SettBoolean:
+                    id:fk_ppg
+                    
+                    title: 'PPG'
+                    desc: 'Check if you want to stream PPG signal'
+
+<PresetPopup>:
+	#name: 'preset'
+	pre_bl:pre_bl
+    load_btn:load_btn
+    save_btn:save_btn
+    add_btn:add_btn
+    rem_btn:rem_btn
+    close_btn:close_btn
+	size_hint: .99, .99
+    auto_dismiss: False
+    title: 'EEG Channels'
+	title_size: "20dp"
+	title_color: (float(233)/255, float(147)/255, float(34)/255, 1)
+	separator_color: float(233)/255, float(147)/255, float(34)/255,1
+	background: "images/blu_back.png" 
+	
+    BoxLayout:
+		padding:dp(5)
+        # spacing: dp(12)
+        orientation:'vertical'
+		BoxLayout:
+            orientation:'vertical'			
+			height:howto_lab.size[1] + dp(60)
+            spacing: dp(1)
+            size_hint_y: None
+			Label:
+                size_hint_y: None
+                id:howto_lab
+                markup: True
+				text: 'Press [b]Load[/b] if you want to load an already compiled preset or [b]Save[/b] to save the current one \nPress [b]Add[/b] to add a channel to the current preset or [b]Remove[/b] to remove a channel (check the delete box before for each channel you want to remove)'
+				font_size: dp(18)
+                text_size:self.width,None
+                size: self.texture_size
+			GridLayout:
+				cols: 4
+				rows: 1
+				spacing:10
+				#padding:10
+				SettButton:
+                    id:load_btn
+                    size_hint_x:0.25
+			        height:20
+					text:'Load'
+					# on_press: root.open_load_preset_popup()
+				SettButton:
+                    id:save_btn
+                    size_hint_x: 0.25
+					height:20
+					text:'Save'
+					# on_press: root.open_save_preset_popup()
+				SettButton:
+                    id:add_btn
+                    size_hint_x:0.25
+					height:20
+					text:'Add'
+					# on_press: root.add_ch()
+				SettButton:
+                    id:rem_btn
+                    size_hint_x:0.25
+					height:20
+					text:'Remove'
+					# on_press: root.rem_ch()
+		SettSpacer:
+		GridLayout:
+			size_hint:(1,None)
+			height:40
+			cols:7
+			rows:1
+			spacing:5
+			padding:5
+			Label:
+				text:'Name'
+				font_size:dp(18)
+			BoxLayout:
+                BoxLayout:
+                Label:
+                    text:'Nr'
+                    font_size:dp(18)
+			Label:
+				text:'Type'
+				font_size:dp(18)
+			Label:
+				text:'Visualize'
+				font_size:dp(18)
+			Label:
+				text:'Compute'
+				font_size:dp(18)
+			Label:
+				text:'EOG'
+				font_size:dp(18)
+			Label:
+				text:'Delete'
+				font_size:dp(18)
+        SettSpacer:
+		ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+				id:pre_bl
+                orientation: 'vertical'
+                spacing:dp(10)
+        SettSpacer:
+        BoxLayout:
+            size_hint:(1,None)
+			height:50
+            BoxLayout:
+                size_hint_x:.33
+            SettButton:
+                id:close_btn
+                size_hint_x:0.34
+                height:40
+                text:'Close'
+                # on_press: root.close_popup()
+            BoxLayout:
+                size_hint_x:.33
+                
+
+
+
+<PresetFilechooser>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+	    FileChooserListView:
+	    	id: filechooser
+	    	path: "Preset"
+	    	on_selection: root.select_file(filechooser.path, filechooser.selection)

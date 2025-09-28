@@ -1,0 +1,354 @@
+#:kivy 2.0.0
+
+<General>:
+
+    name: 'general'
+	id_sub:id_sub
+	sess_sub:sess_sub
+	prot:prot
+	vis_win:vis_win
+	upd_fr:upd_fr
+	ws:ws
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'BSR General Setting'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+				SettSpacer:
+				SettString:
+					id:id_sub
+                    title: 'ID Subject'
+                    desc: 'Type the subject ID'
+                    value:"IDSUB"
+				SettSpacer:
+				SettString:
+					id:sess_sub
+                    title: 'Session'
+                    desc: 'Type the session number'
+                    value:"1"
+				SettSpacer:
+				SettOptions:
+					id:prot
+                    title: 'Protocol'
+                    desc: 'Select one protocol from the list'
+                    options: ["Classic", "WAC","WAC2","EY","MUAC","Cooperation"]
+                    value: "Classic"
+				SettSpacer:
+				SettOptions:
+					id:vis_win
+                    title: 'Viewer Visualization Window'
+                    desc: 'Select the lenght of the viewer visualization window [s]'
+                    options:["10", "20","30"]
+                    value:'10'
+				SettSpacer:
+				SettOptions:
+					id:upd_fr
+                    title: 'Viewer Refresh Rate'
+                    desc: 'Select the update frequency of the viewer [Hz]'
+                    options:["4", "8"]
+                    value:'8'
+				SettSpacer:
+				SettBoolean:
+                    id:ws
+                    title: 'Start WebSocket'
+                    desc: 'Check if you want to use a websocket to stream neurometrics to another app'				
+                SettSpacer:
+
+
+<Processing>:
+
+    name: 'processing'
+	ep:ep
+	shift:shift
+	ma:ma
+	iaf:iaf
+	proc_method:proc_method
+	filt:filt
+	hp:hp
+	lp:lp
+	filt_eog:filt_eog
+	hp_eog:hp_eog
+	lp_eog:lp_eog
+	en_art:en_art
+	en_art_th:en_art_th
+	art_th:art_th
+	en_art_diff:en_art_diff
+	art_diff_min_dist:art_diff_min_dist
+	blink_method:blink_method
+
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Processing Settings'
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                orientation: 'vertical' 
+				SettSpacer:
+				SettOptions:
+					id:ep
+                    title: 'EEG Epoch length'
+                    desc: '2s for PSD, 3s for GFP'
+                    value:'3'
+                    options:["2","3"]
+                SettSpacer:
+				SettString:
+					id:shift
+                    title: 'EEG Epoch shift'
+                    #desc: 'It should be set equal to the sample block size (LA=0.1s, Muse=0.125s)'
+                    value:'1'
+				SettSpacer:
+				SettString:
+					id:ma
+                    title: 'Moving Average Filter Length'
+                    desc: 'Filter used for visual buffering'
+                    value:'30'
+				SettSpacer:
+				SettBoolean:
+					id:iaf
+					title: 'Compute IAF'
+					desc: 'Check if you want to compute IAF, if not 10Hz will be considered'
+				SettSpacer:
+				SettOptions:
+					id:proc_method
+					title: 'Processing Method'
+					desc: 'Select the method to use to compute the metrics'	
+                    value:'GFP'
+                    options:["PSD","GFP"]
+				SettSpacer:
+				SettOptions:
+					id:blink_method
+					title: 'Blink Detection Method'
+					desc: 'Select the method to use to detect blink on Eyes Open condition'	
+                    value:'Robust Reblinca'
+                    options:["Reblinca","Robust Reblinca"]
+				SettSpacer:
+				SettTitle:
+					font_size: '25dp'
+					text: 'Filters Settings'
+                SettSpacer:
+				SettBoolean:
+                    id:filt
+                    title: 'Apply BandPass Filter'
+                    desc: 'Check if you want to filter the EEG signal'	
+					check_active: True			
+				SettSpacer:
+				SettString:
+					id:hp
+                    value:'2'
+                    title: 'High Pass Cutoff'
+                    desc: 'Typical 1 Hz'
+				SettSpacer:
+				SettString:
+					id:lp
+                    value:'30'
+                    title: 'Low Pass Cutoff'
+                    desc: 'Typical 30 Hz'
+                SettSpacer:
+				SettBoolean:
+                    id:filt_eog
+                    title: 'Apply BandPass EOG Filter'
+                    desc: 'Check if you want to filter the EOG signal'
+					check_active: True				
+				SettSpacer:
+				SettString:
+					id:hp_eog
+                    value:'2'
+                    title: 'High Pass EOG Cutoff'
+                    desc: 'Typical 1 Hz'
+				SettSpacer:
+				SettString:
+					id:lp_eog
+                    value:'10'
+                    title: 'Low Pass EOG Cutoff'
+                    desc: 'Typical 7 Hz'          
+				SettSpacer:
+				SettTitle:
+					font_size: '25dp'
+					text: 'Artefact Rejection Settings'
+                SettSpacer:
+				SettBoolean:
+					id: en_art
+                    title: 'Apply Artefact Rejection Methods'
+                    desc: 'Check if you want to use artefact rejection'
+					check_active: True
+				SettSpacer:
+				SettBoolean:
+                    id:en_art_th
+                    title: 'Apply Threshold Method'
+                    desc: 'Check if you want to reject trial that are above the threshold'	
+					check_active: True			
+				SettSpacer:
+				SettString:
+					id:art_th
+                    value:'80'
+                    title: 'Artifact rejection threshold [uV]'
+                    desc: 'Typical 200 uVpp centered on 0'          
+                SettSpacer:
+				SettBoolean:
+                    id:en_art_diff
+                    title: 'Apply Sample-to-Sample difference Method'
+                    desc: 'Check if you want to reject ...'				
+				SettSpacer:
+				SettString:
+					id:art_diff_min_dist
+                    value:'25'
+                    title: 'Artifact rejection Minimum distance [samp]'
+                    desc: 'Typical 25 samples' 
+				SettSpacer:
+
+
+<Metrics>:
+    name: 'metrics'
+	met_bl:met_bl
+	wl:wl
+	att:att
+	aw:aw
+	ar:ar
+	st:st
+	vg:vg
+
+    BoxLayout:
+        orientation:'vertical'
+        SettTitle:
+            text: 'Metrics Settings'
+		SettSpacer:
+		GridLayout:
+			size_hint:(1,None)
+			height:40
+			cols:5
+			rows:1
+			spacing:5
+			padding:5
+			Label:
+				text:'Metric Name'
+				font_size:dp(18)
+				size_hint_x: .2
+			Label:
+				text:'Compute'
+				font_size:dp(18)
+				size_hint_x: .1
+			Label:
+				text:'Computation Method'
+				font_size:dp(18)
+				size_hint_x: .2
+			Label:
+				text:'Feature/Formula'
+				font_size:dp(18)
+				size_hint_x: .3
+			Label:
+				text:'Compute On Channels'
+				font_size:dp(18)
+				size_hint_x: .2
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+				id:met_bl
+                orientation: 'vertical' 
+				SettSpacer:
+				SettMetric:
+					id:wl
+                    metric_name: 'WorkLoad'
+					feat_raw_options:["ThetaFrontal","ThetaFrontal/AlphaParietal"]
+					feat_cal_options: ["ThetaFrontal","ThetaFrontal/AlphaParietal"]
+					feat_class_options: ["ThetaFrontal","AlphaParietal"]
+				SettSpacer:
+				SettMetric:
+					id:att
+                    metric_name: 'Attention'
+					feat_raw_options: ["-AlphaHighFrontal","-BetaFrontalDx","1/BlinkRate"]
+					feat_cal_options: ["-AlphaHighFrontal","-BetaFrontalDx","1/BlinkRate"]
+					feat_class_options: ["FrontalTheta", "FrontalAlpha", "FrontalBeta"]
+				SettSpacer:
+				SettMetric:
+					id:aw
+                    metric_name: 'Approach Withdrawal'
+					feat_raw_options: ["AlphaFrontalRight-AlphaFrontalLeft","ThetaFrontal","ThetaFrontal/AlphaParietal"]
+					feat_cal_options: ["AlphaFrontalRight-AlphaFrontalLeft"]
+					feat_class_options: []
+				SettSpacer:				
+				SettMetric:
+					id:st
+                    metric_name: 'Stress'
+					feat_raw_options: ["BetaHighParietalSxDx","LowPass 0.5Hz"]
+					feat_cal_options: ["BetaHighParietalSxDx","LowPass 0.5Hz"]
+					feat_class_options: ["BetaHighParietalSxDx"]
+				SettSpacer:
+				SettMetric:
+					id:vg
+                    metric_name: 'Vigilance'
+					feat_raw_options: ["-BetaFrontalDx","BetaHighParietalSxDx","1/BetaFrontalDx"]
+					feat_cal_options: ["-BetaFrontalDx"]
+					feat_class_options: ["BetaFrontalDx"]
+				SettSpacer:
+				SettMetric:
+					id:ar
+                    metric_name: 'Arousal'
+					feat_raw_options: ["LowPass 0.5Hz"]
+					feat_cal_options: ["LowPass 0.5Hz"]
+					feat_class_options: []
+				SettSpacer:
+
+
+<BSRSettings>:
+	bl:bl
+
+	BoxLayout:
+		id:bl
+		padding: dp(10)
+		canvas.before:
+			Color:
+				rgba: float(25)/255,float(63)/255,float(90)/255,1
+				#rgb: 1,1,1
+			Rectangle:
+				pos: self.pos
+				size: self.size
+		FloatLayout:
+			size_hint_x: None
+			width: '200dp'
+			id:fl
+			GridLayout:
+				pos: root.pos
+				cols: 1
+				padding: 10
+				spacing: 10
+
+				SettButton:
+					text: 'General'
+					id: gen_button
+					pos: fl.x + dp(10), fl.y + dp(10)
+					width: fl.width - dp(20)
+					on_press: root.go_to_general()
+				SettButton:
+					text: 'Processing'
+					id: sh_button
+					pos: fl.x + dp(10), fl.y + dp(10)
+					width: fl.width - dp(20)
+					on_press: root.go_to_processing()
+				SettButton:
+					text: 'Metrics'
+					id: met_button
+					pos: fl.x + dp(10), fl.y + dp(10)
+					width: fl.width - dp(20)
+					on_press: root.go_to_metrics()
+
+			SettButton:
+				text: 'Close'
+				pos: fl.x + dp(10), fl.y + dp(10)
+				width: fl.width - dp(20)
+				id: button
+				on_press:app.root.close_settings()
+		BoxLayout:
+			canvas:
+				Color:
+					rgba: [float(233)/255, float(147)/255, float(34)/255,1]
+				Rectangle:
+					pos: self.pos
+					size: self.size
+			size_hint_x: None
+			width: 3

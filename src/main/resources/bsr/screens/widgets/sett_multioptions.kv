@@ -1,0 +1,31 @@
+#:kivy 2.0.0
+
+<SettMultiOptionsPopup>:
+
+    ad_bl:ad_bl
+    done_btn:done_btn
+    title_size:'30dp'
+    separator_color:[float(233)/255, float(147)/255, float(34)/255,1]
+    size_hint: None,None
+    background_color: [float(25)/255,float(63)/255,float(90)/255,1]
+    background: '' 
+    title:''
+    
+    BoxLayout:
+        orientation:'vertical'
+        spacing: 5
+        ScrollView:
+            do_scroll_x:False
+            do_scroll_y:True
+            AdaptableBoxLayout:
+                id:ad_bl
+                spacing:3
+                Widget:
+                    size_hint_y:None
+                    height:1
+        SettSpacer:        
+        Button:
+            id:done_btn
+            text:'Done'
+            size_hint_y:None 
+            height:dp(45)

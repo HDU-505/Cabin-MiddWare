@@ -1,0 +1,140 @@
+#:kivy 2.0.0
+
+#:import path os.path
+
+#:set images_folder path.join("images")
+
+<HomeCard>:
+	orientation:"vertical"
+	# focus_behavior: False
+	elevation:3
+	radius:20
+	btn:btn
+	padding:dp(20)
+	md_bg_color:(float(25)/255,float(63)/255,float(130)/255,1)
+
+	Button:
+		id:btn
+		size_hint_y:0.8
+		background_color:(0,0,0,0)
+		background_normal:''
+		Image:
+			size: self.parent.size[0],self.parent.size[1]
+			pos:self.parent.pos[0],self.parent.pos[1]
+			source: root.img_src
+	MDLabel:
+		size_hint_y:0.2
+		text:root.btn_txt
+		color:(1,1,1,1)
+		italic: True
+		bold: True
+		font_size: "40dp"
+		halign:'center'
+
+<Home>:
+	name: 'home'
+	sr_btn:sr_btn
+	cal_btn:cal_btn
+	met_btn:met_btn
+	gi_btn:gi_btn
+    fr_btn:fr_btn
+	set_btn:set_btn
+	BoxLayout:
+		orientation: "vertical"
+		opacity:0
+
+		canvas.before:
+			Color:
+				rgba:(float(233)/255, float(147)/255, float(34)/255,0.5)
+			Triangle:
+				points:[0,self.size[1],self.size[0],self.size[1],0,self.size[1]-(0.4*self.size[1])]	
+			Color:
+				rgba:(float(233)/255, float(147)/255, float(34)/255,0.5)
+			Triangle:
+				points:[0,self.size[1],self.size[0],self.size[1],self.size[0],self.size[1]-(0.4*self.size[1])]	
+			# Color:
+			# 	rgba:(float(233)/255, float(147)/255, float(34)/255,0.5)
+			# Triangle:
+			# 	points:[0,0,self.size[0],0,0,self.size[1]-(0.8*self.size[1])]	
+			# Color:
+			# 	rgba:(float(233)/255, float(147)/255, float(34)/255,0.5)
+			# Triangle:
+			# 	points:[0,0,self.size[0],0,self.size[0],self.size[1]-(0.8*self.size[1])]	
+
+		#----------LOGO/SETTINGS---------#
+		BoxLayout:
+			size_hint_y: .2
+			Image:
+				size_hint: .6, 1
+				source: "images/bs_logo.png"
+			Label:
+				size_hint: .25,1
+				text: root.date
+				font_size: "40dp"
+				italic: True
+				halign: 'left'
+				valign: 'center'
+				color: float(25)/255,float(63)/255,float(90)/255,1
+				text_size:self.size[0] , self.size[1]
+				#font_name: "ITCKRIST"
+			BoxLayout:
+				size_hint: .14,1
+				orientation: "vertical"
+				BoxLayout:
+					size_hint_y: 0.1
+				BoxLayout:
+					size_hint_y: 0.3
+					BoxLayout:
+						size_hint_x: 0.7
+					Button:
+						size_hint_x:0.3
+						background_normal: "images/button_back_t.png"
+						on_press: app.root.close_app() #app.stop()
+						Image:
+							size: self.parent.size[0],self.parent.size[1]
+							pos:self.parent.pos[0],self.parent.pos[1]
+							source: "images/close_icon_5.png"
+				BoxLayout:
+					size_hint: 1,0.6
+					background_normal: "images/button_back_t.png"
+			BoxLayout:
+				size_hint_x: .01
+		
+		#----------BUTTONS GRID---------#		             			
+		GridLayout:
+			cols: 3
+			rows: 2
+			size_hint_y: .8
+			padding: dp(50)
+			spacing: dp(40)
+
+			HomeCard:
+				id:sr_btn
+				img_src: "images/rec.png"
+				btn_txt: 'Signal Recorder'
+			HomeCard:
+				id:cal_btn
+				img_src: path.join(images_folder,"cal.png")
+				btn_txt: 'Calibration'
+
+			HomeCard:
+				id:met_btn
+				img_src: path.join(images_folder,"nm.png")
+				btn_txt: 'Online Metrics'
+
+			HomeCard:
+				id:gi_btn
+				img_src: path.join(images_folder,"graph_icon_home.png")
+				btn_txt: 'Graph Image'
+
+			HomeCard:
+				id:fr_btn
+				img_src: path.join(images_folder,"rep.png")
+				btn_txt: 'Final Report'
+
+			HomeCard:
+				id:set_btn
+				img_src: path.join(images_folder,"settings_icon_2.png")
+				btn_txt: 'Settings'
+
+			

@@ -1,14 +1,10 @@
 package com.hdu.neurostudent_signalflow;
 
-import com.hdu.neurostudent_signalflow.devicelister.MindToothDeviceLister;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
+import com.hdu.neurostudent_signalflow.devicelister.mindtooth.MindToothDeviceLister;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 

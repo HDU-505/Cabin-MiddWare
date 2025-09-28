@@ -1,0 +1,20 @@
+#:kivy 1.11.1
+
+<WarningPopup>:
+
+	size_hint: .65, .25
+    auto_dismiss: True
+    title: 'WARNING'
+	title_size: "35dp"
+	title_color: float(233)/255, float(147)/255, float(34)/255,1
+	separator_color: float(233)/255, float(147)/255, float(34)/255,1
+	background: "images/blu_back.png" 
+	
+	BoxLayout:
+		id:bl
+		Label:
+			text: root.lab_txt
+			font_size: "30dp"
+			text_size: self.size
+			valign: "middle"
+

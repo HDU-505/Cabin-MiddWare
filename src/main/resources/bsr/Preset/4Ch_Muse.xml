@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<root>
+	<channels>
+		<TP9>
+			<nr>1</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>True</eog>
+		</TP9>
+		<AF7>
+			<nr>2</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>False</toCompute>
+			<eog>False</eog>
+		</AF7>
+		<AF8>
+			<nr>3</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>False</toCompute>
+			<eog>False</eog>
+		</AF8>
+		<TP10>
+			<nr>4</nr>
+			<type>EEG</type>
+			<toVisualize>True</toVisualize>
+			<toCompute>True</toCompute>
+			<eog>False</eog>
+		</TP10>
+	</channels>
+</root>

@@ -1,14 +1,10 @@
 package com.hdu.neurostudent_signalflow;
 
-import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
-import com.hdu.neurostudent_signalflow.devicelister.MindToothEnvInit;
-import com.hdu.neurostudent_signalflow.utils.IdGenerator;
+import com.hdu.neurostudent_signalflow.devicelister.mindtooth.MindToothEnvInit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.Resource;
 

@@ -10,12 +10,16 @@ import javax.annotation.Resource;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/*
+*   label设备适配器
+* */
 @Component
 public class LabelDeviceAdapter extends Device implements DeviceAdapter{
     private static final Logger logger = LoggerFactory.getLogger(LabelDeviceAdapter.class);
 
     //发送队列
-    private BlockingQueue<String> sendQuue = new LinkedBlockingQueue<>();
+    private BlockingQueue<String> sendQuue = new LinkedBlockingQueue<>(1000);
+
     // 数据转发服务对象
     @Resource
     DataTransmitService dataTransmitService;
@@ -34,8 +38,7 @@ public class LabelDeviceAdapter extends Device implements DeviceAdapter{
 
             // 数据转发
             dataTransmitService.setSendQueue(sendQuue);
-            Thread thread1 = new Thread(dataTransmitService);
-            thread1.start();
+            dataTransmitService.start();
         }catch (Exception e){
             e.printStackTrace();
             logger.error("label适配器数据转换出现异常...");
