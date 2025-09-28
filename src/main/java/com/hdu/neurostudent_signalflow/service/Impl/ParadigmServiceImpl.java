@@ -3,6 +3,8 @@ package com.hdu.neurostudent_signalflow.service.Impl;
 import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.config.ParadigmConfig;
 import com.hdu.neurostudent_signalflow.entity.ParadigmTouchScreen;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentEvent;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
 import com.hdu.neurostudent_signalflow.service.ParadigmService;
 import com.hdu.neurostudent_signalflow.utils.ConfigManager;
 import com.hdu.neurostudent_signalflow.utils.IdGenerator;
@@ -23,6 +25,9 @@ public class ParadigmServiceImpl implements ParadigmService {
     private static final Logger logger = LoggerFactory.getLogger(ParadigmServiceImpl.class);
 
     private List<Process> processes = new ArrayList<>();
+
+    private final ExperimentStateMachine experimentStateMachine = ExperimentStateMachine.getInstance();
+
 
     public ParadigmServiceImpl() {
         paradigmTouchScreenCache = new ParadigmTouchScreen();
@@ -129,7 +134,7 @@ public class ParadigmServiceImpl implements ParadigmService {
             logger.error("执行范式失败,原因:未选择范式");
             return false;
         }
-        ExperimentProperties.EXPERIMENT_ID = experiment_id;
+        ExperimentProperties.experimentId = experiment_id;
         // 执行范式
         // 获取范式文件
         String filePath = ParadigmConfig.PARADIGM.getFilePath();
@@ -231,6 +236,8 @@ public class ParadigmServiceImpl implements ParadigmService {
             // 等待外部应用程序退出
             int exitCode = process.waitFor();
             System.out.println("External application exited with code: " + exitCode);
+            // 实验结束
+            experimentStateMachine.handleEvent(ExperimentEvent.END_EXPERIMENT);
         } catch (IOException | InterruptedException e) {
             logger.error("范式启动失败,原因为："+e.getMessage());
             e.printStackTrace();

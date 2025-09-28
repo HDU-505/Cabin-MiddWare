@@ -23,7 +23,6 @@ public class NeuroStudentSignalFlowApplication {
             // 在这里添加您需要的销毁操作
             System.out.println("Application is shutting down...");
             // 关闭数据库连接
-
         }));
     }
 
