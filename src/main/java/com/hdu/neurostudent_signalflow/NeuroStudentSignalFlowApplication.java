@@ -1,6 +1,8 @@
 package com.hdu.neurostudent_signalflow;
 
+import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.devicelister.MindToothEnvInit;
+import com.hdu.neurostudent_signalflow.utils.IdGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -25,7 +27,6 @@ public class NeuroStudentSignalFlowApplication {
             // 在这里添加您需要的销毁操作
             System.out.println("Application is shutting down...");
             // 关闭数据库连接
-
         }));
     }
 

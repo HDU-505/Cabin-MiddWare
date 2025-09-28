@@ -4,6 +4,8 @@ import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.config.ParadigmConfig;
 import com.hdu.neurostudent_signalflow.devicelister.MindToothEnvInit;
 import com.hdu.neurostudent_signalflow.entity.ParadigmTouchScreen;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentEvent;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
 import com.hdu.neurostudent_signalflow.service.ParadigmService;
 import com.hdu.neurostudent_signalflow.utils.ConfigManager;
 import com.hdu.neurostudent_signalflow.utils.IdGenerator;
@@ -25,13 +27,16 @@ import java.util.List;
 
 @Service
 public class ParadigmServiceImpl implements ParadigmService {
-    ParadigmTouchScreen paradigmTouchScreenCahce;
+    private ParadigmTouchScreen paradigmTouchScreenCahce;
 
     private static final Logger logger = LoggerFactory.getLogger(ParadigmServiceImpl.class);
+
+    private final ExperimentStateMachine experimentStateMachine = ExperimentStateMachine.getInstance();
 
 
     public ParadigmServiceImpl() {
         paradigmTouchScreenCahce = new ParadigmTouchScreen();
+
     }
 
     /*
@@ -229,6 +234,8 @@ public class ParadigmServiceImpl implements ParadigmService {
             int exitCode = process.waitFor();
             System.out.println("External application exited with code: " + exitCode);
 
+            // 实验结束
+            experimentStateMachine.handleEvent(ExperimentEvent.END_EXPERIMENT);
         } catch (IOException | InterruptedException e) {
             logger.error("范式启动失败,原因为："+e.getMessage());
             e.printStackTrace();

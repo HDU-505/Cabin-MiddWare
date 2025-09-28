@@ -25,7 +25,7 @@ public class MqttSendClient {
     public MqttSendClient(@Lazy MqttSendCallBack mqttSendCallBack, MqttProperties mqttProperties) {
         this.mqttSendCallBack = mqttSendCallBack;
         this.mqttProperties = mqttProperties;
-        connect(); // 初次连接
+//        connect(); // 初次连接
     }
 
     public void connect() {

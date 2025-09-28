@@ -41,7 +41,6 @@ public class AppConfig {
     }
 
     @Bean
-    @DependsOn("experimentStatusServer")
     public ExperimentStatusWebsocketClient experimentStatusServerClient() {
         try {
             ExperimentStatusWebsocketClient webSocketClient =

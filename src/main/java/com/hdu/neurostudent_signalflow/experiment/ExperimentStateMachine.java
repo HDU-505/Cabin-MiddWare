@@ -1,5 +1,7 @@
 package com.hdu.neurostudent_signalflow.experiment;
 
+import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -71,6 +73,9 @@ public class ExperimentStateMachine {
                 return false; // 无效事件
             }
         } while (!currentState.compareAndSet(prevState, nextState));
+
+        ExperimentProperties.state = nextState; // 更新全局状态
+
         // 通知监听器状态变化
         for (StateChangeListener listener : listeners) {
             listener.onStateChange(prevState, nextState);

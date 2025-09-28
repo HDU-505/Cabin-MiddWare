@@ -1,5 +1,6 @@
 package com.hdu.neurostudent_signalflow.websocket;
 
+import com.alibaba.fastjson.JSON;
 import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentState;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
@@ -43,7 +44,7 @@ public class ExperimentStatusSocket {
             int attempts = maxRetryAttempts;
             while (attempts > 0) {
                 try {
-                    sendMessage(ExperimentProperties.experimentId + "=" + newState);
+                    sendMessage(generateExperimentMessage());
                     return; // 成功发送就退出
                 } catch (IOException e) {
                     attempts--;
@@ -61,7 +62,7 @@ public class ExperimentStatusSocket {
         @Override
         public void onError(ExperimentState errorState) {
             try {
-                sendMessage(ExperimentProperties.experimentId + "=" + errorState);
+                sendMessage(generateExperimentMessage());
             } catch (IOException e) {
                 logger.error("[状态控制服务器]:向客户端:" + clientId +" 发送实验异常状态失败", e);
             }
@@ -202,5 +203,16 @@ public class ExperimentStatusSocket {
 
     public void setSession(Session session) {
         this.session = session;
+    }
+
+    private String generateExperimentMessage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("experimentId").append("=");
+        sb.append(ExperimentProperties.experimentId).append("&");
+        sb.append("state").append("=");
+        sb.append(ExperimentProperties.state).append("&");
+        sb.append("experimentInfo").append("=");
+        sb.append(JSON.toJSONString(ExperimentProperties.experiment));
+        return sb.toString();
     }
 }
