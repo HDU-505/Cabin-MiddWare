@@ -1,5 +1,9 @@
 package com.hdu.neurostudent_signalflow.websocket;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -16,18 +20,19 @@ import java.util.stream.Stream;
  *   这个websocket服务器专用于
  *
  * */
-
+@ServerEndpoint("/websocket/messageServer")
 @Component
-@ServerEndpoint("/websocket/w")
-public class WebsocketServer {
+public class MessageWebsocketServer {
+    private static Logger logger = LoggerFactory.getLogger(MessageWebsocketServer.class);
+
     // 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
 
     // concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    private static CopyOnWriteArraySet<WebsocketServer> webSocketSet = new CopyOnWriteArraySet<>();
+    private static CopyOnWriteArraySet<MessageWebsocketServer> webSocketSet = new CopyOnWriteArraySet<>();
 
     // 存储客户端ID和对应的WebSocket对象
-    private static ConcurrentHashMap<String, WebsocketServer> clientMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, MessageWebsocketServer> clientMap = new ConcurrentHashMap<>();
 
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -35,8 +40,8 @@ public class WebsocketServer {
     // 客户端ID
     private String clientId;
 
-    public WebsocketServer() {
-        System.out.println("启动websocket服务器");
+    public MessageWebsocketServer() {
+        logger.info("启动websocket消息服务器...");
     }
 
     /**
@@ -47,7 +52,6 @@ public class WebsocketServer {
     @OnOpen
     public void onOpen(Session session) throws IOException {
         this.session = session;
-        String clientId = UUID.randomUUID().toString(); // 使用随机生成的 UUID 作为客户端 ID
         String queryString = session.getQueryString();
 
         Map<String, String> params = new ConcurrentHashMap<>();
@@ -57,12 +61,11 @@ public class WebsocketServer {
                     .collect(Collectors.toMap(param -> param[0], param -> param[1]));
         }
 
-        String username = params.get("username");
-        if (username == null) {
-            username = "UnknownUser"; // 如果没有提供用户名，可以设置一个默认值
+        String clientId = params.get("username");
+        if (clientId == null) {
+            clientId = "UnknownUser"; // 如果没有提供用户名，可以设置一个默认值
         }
 
-        System.out.println("用户 " + username + " 连接成功！");
         this.clientId = clientId;
         webSocketSet.add(this); // 加入set中
         clientMap.put(clientId, this); // 加入clientMap中
@@ -79,7 +82,7 @@ public class WebsocketServer {
         webSocketSet.remove(this); // 从set中删除
         clientMap.remove(this.clientId); // 从clientMap中删除
         subOnlineCount(); // 在线数减1
-        System.out.println("[数据传输服务器]:有一连接关闭！当前在线人数为" + getOnlineCount());
+        logger.info("[数据传输服务器]:"+ this.clientId +"连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -87,17 +90,46 @@ public class WebsocketServer {
      * @param message 客户端发送过来的消息
      * @param session 可选的参数
      */
+    // 消息格式：{"from":"clientId","to":"all","type":1,"message":"Hello, World!"}
+    // 消息类型： paradigm(0): 范式数据，control(1): 控制命令，data: 实验数据(2)
     @OnMessage
     public void onMessage(String message, Session session) {
         String clientId = this.clientId;
-        System.out.println("[数据传输服务器]:来自客户端用户" + clientId + "的消息:" + message);
-        // 群发消息
-        for (WebsocketServer item : webSocketSet) {
-            try {
-                System.out.println("[数据传输服务器]:向客户端用户" + clientId + "发送消息:" + message);
-                item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
+        logger.info("[数据传输服务器]:来自客户端用户" + clientId + "的消息:" + message);
+        // 解析json消息
+        WebSocketMessage webSocketMessage = JSON.parseObject(message, WebSocketMessage.class);
+        if (webSocketMessage == null) {
+            logger.error("[数据传输服务器]:无法解析客户端用户" + clientId + "的消息:" + message);
+            return;
+        }
+
+        if (webSocketMessage.getTo().isEmpty()) {
+            logger.error("[数据传输服务器]:消息接收方为空，无法发送消息:" + message);
+            return;
+        }
+        if (webSocketMessage.getTo().equals("all")) {
+            // 群发消息
+            for (MessageWebsocketServer item : webSocketSet) {
+                try {
+                    System.out.println("[数据传输服务器]:向客户端用户" + item.clientId + "发送消息:" + message);
+                    item.sendMessage(message);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return;
+        } else {
+            // 发送给指定客户端
+            MessageWebsocketServer toClient = clientMap.get(webSocketMessage.getTo());
+            if (toClient != null) {
+                try {
+                    System.out.println("[数据传输服务器]:向客户端用户" + toClient.clientId + "发送消息:" + message);
+                    toClient.sendMessage(message);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                logger.error("[数据传输服务器]:找不到指定的接收方客户端:" + webSocketMessage.getTo());
             }
         }
     }
@@ -127,27 +159,11 @@ public class WebsocketServer {
     }
 
     public static synchronized void addOnlineCount() {
-        WebsocketServer.onlineCount++;
+        MessageWebsocketServer.onlineCount++;
     }
 
     public static synchronized void subOnlineCount() {
-        WebsocketServer.onlineCount--;
+        MessageWebsocketServer.onlineCount--;
     }
 
-    public static CopyOnWriteArraySet<WebsocketServer> getWebSocketSet() {
-        return webSocketSet;
-    }
-
-    public static void setWebSocketSet(
-            CopyOnWriteArraySet<WebsocketServer> webSocketSet) {
-        WebsocketServer.webSocketSet = webSocketSet;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
 }

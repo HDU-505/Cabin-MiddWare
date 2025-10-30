@@ -122,8 +122,8 @@ public class ParadigmLister extends DeviceLister {
                 }
 
                 if (data[1] == 255.0) {
-                    if (ExperimentProperties.EXPERIMENT_ID != null)
-                        experimentClinet.endExperiment(ExperimentProperties.EXPERIMENT_ID);
+                    if (ExperimentProperties.experimentId != null)
+                        experimentClinet.endExperiment(ExperimentProperties.experimentId);
                     else
                         logger.error("实验ID为空，无法结束实验");
                 }

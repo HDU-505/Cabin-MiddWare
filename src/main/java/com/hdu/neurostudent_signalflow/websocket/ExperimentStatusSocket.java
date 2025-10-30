@@ -23,6 +23,7 @@ import java.util.stream.Stream;
  * */
 
 @ServerEndpoint("/websocket/experimentStatusServer")
+@Component
 public class ExperimentStatusSocket {
     private static Logger logger = LoggerFactory.getLogger(ExperimentStatusSocket.class);
 
@@ -77,7 +78,7 @@ public class ExperimentStatusSocket {
 
     public ExperimentStatusSocket() {
         // 注册实验状态监听器
-        ExperimentStateMachine.getInstance().addLister(experimentStateLister);
+        logger.info("启动实验状态控制服务器...");
     }
 
     @PreDestroy
@@ -117,6 +118,7 @@ public class ExperimentStatusSocket {
 
         // 连接建立后，发送当前实验状态给新连接的客户端
         this.sendMessage(ExperimentProperties.experimentId + "=" + ExperimentProperties.state);
+        ExperimentStateMachine.getInstance().addLister(experimentStateLister);
     }
 
     /**
@@ -127,7 +129,7 @@ public class ExperimentStatusSocket {
         webSocketSet.remove(this); // 从set中删除
         clientMap.remove(this.clientId); // 从clientMap中删除
         subOnlineCount(); // 在线数减1
-        logger.info("[状态控制服务器]:有一连接关闭！当前在线人数为" + getOnlineCount());
+        logger.info("[状态控制服务器]:" + this.clientId + "连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**

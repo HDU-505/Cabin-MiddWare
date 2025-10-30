@@ -20,11 +20,10 @@ public class AppConfig {
 //        return new LinkedBlockingQueue<>();
 //    }
 
-    private final String mindToothWsServerUrl = "ws://127.0.0.1:8888/websocket/w";
+    private final String mindToothWsServerUrl = "ws://127.0.0.1:8888/websocket/messageServer?username=neurostudent_signalflow";
     private final String experimentStatusServerUrl = "ws://127.0.0.1:8888/websocket/experimentStatusServer?username=neurostudent_signalflow";
 
     @Bean
-    @DependsOn("websocketServer")
     public MindtoothWebSocketClient webSocketClient() {
         try {
             MindtoothWebSocketClient webSocketClient =
@@ -40,19 +39,19 @@ public class AppConfig {
         return null;
     }
 
-    @Bean
-    public ExperimentStatusWebsocketClient experimentStatusServerClient() {
-        try {
-            ExperimentStatusWebsocketClient webSocketClient =
-                    new ExperimentStatusWebsocketClient(new URI(experimentStatusServerUrl));
-            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-            executor.schedule(() -> {
-                webSocketClient.connect();
-            }, 5, TimeUnit.SECONDS);
-            return webSocketClient;
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    @Bean
+//    public ExperimentStatusWebsocketClient experimentStatusServerClient() {
+//        try {
+//            ExperimentStatusWebsocketClient webSocketClient =
+//                    new ExperimentStatusWebsocketClient(new URI(experimentStatusServerUrl));
+//            ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+//            executor.schedule(() -> {
+//                webSocketClient.connect();
+//            }, 5, TimeUnit.SECONDS);
+//            return webSocketClient;
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }
