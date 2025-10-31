@@ -1,6 +1,7 @@
 package com.hdu.neurostudent_signalflow.websocket;
 
 import com.alibaba.fastjson.JSON;
+import com.hdu.neurostudent_signalflow.config.AppIdentity;
 import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentState;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -21,7 +23,7 @@ import java.util.stream.Stream;
 /*
  *   用于单台cabin的整体实验状态同步
  * */
-
+@Component
 @ServerEndpoint("/websocket/experimentStatusServer")
 public class ExperimentStatusSocket {
     private static Logger logger = LoggerFactory.getLogger(ExperimentStatusSocket.class);
@@ -116,7 +118,7 @@ public class ExperimentStatusSocket {
         logger.info("[状态控制服务器]:新连接的客户端ID：" + clientId);
 
         // 连接建立后，发送当前实验状态给新连接的客户端
-        this.sendMessage(ExperimentProperties.experimentId + "=" + ExperimentProperties.state);
+        this.sendMessage(generateExperimentMessage());
     }
 
     /**
@@ -206,13 +208,16 @@ public class ExperimentStatusSocket {
     }
 
     private String generateExperimentMessage() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("experimentId").append("=");
-        sb.append(ExperimentProperties.experimentId).append("&");
-        sb.append("state").append("=");
-        sb.append(ExperimentProperties.state).append("&");
-        sb.append("experimentInfo").append("=");
-        sb.append(JSON.toJSONString(ExperimentProperties.experiment));
-        return sb.toString();
+        ExperimentStateMessage experimentStateMessage = new ExperimentStateMessage(AppIdentity.getIdentity(),ExperimentProperties.experimentId,ExperimentProperties.state);
+        return JSON.toJSONString(experimentStateMessage);
+
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("experimentId").append("=");
+//        sb.append(ExperimentProperties.experimentId).append("&");
+//        sb.append("state").append("=");
+//        sb.append(ExperimentProperties.state).append("&");
+//        sb.append("experimentInfo").append("=");
+//        sb.append(JSON.toJSONString(ExperimentProperties.experiment));
+//        return sb.toString();
     }
 }
