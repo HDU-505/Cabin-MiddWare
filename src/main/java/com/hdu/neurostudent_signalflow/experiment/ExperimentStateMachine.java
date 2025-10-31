@@ -16,6 +16,7 @@ public class ExperimentStateMachine {
 
     private ExperimentStateMachine() {
         initTransitions();
+        ExperimentProperties.state = ExperimentState.NOT_STARTED;
     }
 
     public static ExperimentStateMachine getInstance() {
