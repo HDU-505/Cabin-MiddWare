@@ -31,6 +31,9 @@ public class ExperimentStatusSocket {
     // 静态变量，用来记录当前在线连接数
     private static int onlineCount = 0;
 
+    private static final int maxRetryAttempts = 3;
+
+
     // concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
     private static CopyOnWriteArraySet<ExperimentStatusSocket> webSocketSet = new CopyOnWriteArraySet<>();
 
@@ -38,36 +41,16 @@ public class ExperimentStatusSocket {
     private static ConcurrentHashMap<String, ExperimentStatusSocket> clientMap = new ConcurrentHashMap<>();
 
     // 实验状态监听器
-    private final ExperimentStateMachine.StateChangeListener experimentStateLister = new ExperimentStateMachine.StateChangeListener() {
-        private int maxRetryAttempts = 3;
+    private static final ExperimentStateMachine.StateChangeListener shareExperimentStateLister = new ExperimentStateMachine.StateChangeListener() {
 
         @Override
         public void onStateChange(ExperimentState oldState, ExperimentState newState) {
-            int attempts = maxRetryAttempts;
-            while (attempts > 0) {
-                try {
-                    sendMessage(generateExperimentMessage());
-                    return; // 成功发送就退出
-                } catch (IOException e) {
-                    attempts--;
-                    if (attempts == 0) {
-                        logger.error("[状态控制服务器]:向客户端:" + clientId +" 发送实验状态失败", e);
-                    } else {
-                        try {
-                            Thread.sleep(100); // 可以加个短延时
-                        } catch (InterruptedException ignored) {}
-                    }
-                }
-            }
+            broadcastToAll(newState);
         }
 
         @Override
         public void onError(ExperimentState errorState) {
-            try {
-                sendMessage(generateExperimentMessage());
-            } catch (IOException e) {
-                logger.error("[状态控制服务器]:向客户端:" + clientId +" 发送实验异常状态失败", e);
-            }
+            broadcastToAll(errorState);
         }
     };
 
@@ -77,6 +60,10 @@ public class ExperimentStatusSocket {
     // 客户端ID
     private String clientId;
 
+    static {
+        ExperimentStateMachine.getInstance().addLister(shareExperimentStateLister);
+    }
+
     public ExperimentStatusSocket() {
         // 注册实验状态监听器
         logger.info("启动实验状态控制服务器...");
@@ -85,7 +72,29 @@ public class ExperimentStatusSocket {
     @PreDestroy
     private void cleanup() {
         // 注销实验状态监听器
-        ExperimentStateMachine.getInstance().removeLister(experimentStateLister);
+        ExperimentStateMachine.getInstance().removeLister(shareExperimentStateLister);
+    }
+
+    private static void broadcastToAll(ExperimentState state) {
+        int attempts = maxRetryAttempts;
+
+        while (attempts > 0) {
+            for (ExperimentStatusSocket experimentStatusSocket : webSocketSet) {
+                try {
+                    experimentStatusSocket.sendMessage(generateExperimentMessage());
+                    return; // 成功发送就退出
+                } catch (Exception e) {
+                    attempts--;
+                    if (attempts == 0) {
+                        logger.error("[状态控制服务器]:向客户端:" + experimentStatusSocket.clientId +" 发送实验状态失败", e);
+                    } else {
+                        try {
+                            Thread.sleep(100); // 可以加个短延时
+                        } catch (InterruptedException ignored) {}
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -207,7 +216,7 @@ public class ExperimentStatusSocket {
         this.session = session;
     }
 
-    private String generateExperimentMessage() {
+    private static String generateExperimentMessage() {
         ExperimentStateMessage experimentStateMessage = new ExperimentStateMessage(AppIdentity.getIdentity(),ExperimentProperties.experimentId,ExperimentProperties.state);
         return JSON.toJSONString(experimentStateMessage);
 
