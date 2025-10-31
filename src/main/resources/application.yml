@@ -64,3 +64,7 @@ gazepoint:
 paradigm:
   enabled: true
   write2File: false
+
+app:
+  name: NeuroStudent-Signal-Flow
+  instance-id: node-hdu-lab-001
