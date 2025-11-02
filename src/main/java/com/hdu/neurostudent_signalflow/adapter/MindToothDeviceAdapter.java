@@ -1,7 +1,7 @@
 package com.hdu.neurostudent_signalflow.adapter;
 
 import com.hdu.neurostudent_signalflow.config.MindToothProperties;
-import com.hdu.neurostudent_signalflow.service.DataTransmitService;
+import com.hdu.neurostudent_signalflow.service.Impl.DataTransmitService;
 import com.hdu.neurostudent_signalflow.thread.MindToothOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.*;
 
 /*

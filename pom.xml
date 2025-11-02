@@ -158,6 +158,32 @@
             <version>11.7</version>
         </dependency>
 
+        <!-- JavaCV - 完整的计算机视觉库 -->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>1.5.9</version>
+        </dependency>
+
+        <!-- JNA for Windows 原生捕获 -->
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>5.14.0</version>
+        </dependency>
+
+        <!-- 图像处理增强 -->
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-core</artifactId>
+            <version>3.9.4</version>
+        </dependency>
+
         <!--  测试依赖      -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

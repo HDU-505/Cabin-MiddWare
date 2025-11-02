@@ -1,19 +1,11 @@
 package com.hdu.neurostudent_signalflow.thread;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hdu.neurostudent_signalflow.adapter.ComDeviceAdapter;
-import com.hdu.neurostudent_signalflow.service.DataTransmitService;
-import com.hdu.neurostudent_signalflow.service.UnifyDataService;
+import com.hdu.neurostudent_signalflow.service.Impl.DataTransmitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.*;
 
 /*

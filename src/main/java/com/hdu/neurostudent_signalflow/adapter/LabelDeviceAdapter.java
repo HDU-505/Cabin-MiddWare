@@ -1,6 +1,6 @@
 package com.hdu.neurostudent_signalflow.adapter;
 
-import com.hdu.neurostudent_signalflow.service.DataTransmitService;
+import com.hdu.neurostudent_signalflow.service.Impl.DataTransmitService;
 import com.hdu.neurostudent_signalflow.thread.LabelOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
