@@ -69,12 +69,6 @@ public class ExperimentStatusSocket {
         logger.info("启动实验状态控制服务器...");
     }
 
-    @PreDestroy
-    private void cleanup() {
-        // 注销实验状态监听器
-        ExperimentStateMachine.getInstance().removeLister(shareExperimentStateLister);
-    }
-
     private static void broadcastToAll(ExperimentState state) {
         int attempts = maxRetryAttempts;
 
