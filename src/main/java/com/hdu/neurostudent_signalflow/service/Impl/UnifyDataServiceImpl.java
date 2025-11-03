@@ -2,22 +2,15 @@ package com.hdu.neurostudent_signalflow.service.Impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.hdu.neurostudent_signalflow.entity.UnifyData;
-import com.hdu.neurostudent_signalflow.service.DataTransmitService;
 import com.hdu.neurostudent_signalflow.service.UnifyDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
 
 @Component
 @Scope("prototype")

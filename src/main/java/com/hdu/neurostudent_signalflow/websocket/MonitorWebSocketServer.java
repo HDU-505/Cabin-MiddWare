@@ -5,12 +5,14 @@ import com.hdu.neurostudent_signalflow.config.AppIdentity;
 import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentState;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
+import com.hdu.neurostudent_signalflow.monitor.CameraMonitor;
+import com.hdu.neurostudent_signalflow.monitor.ScreenMonitor;
+import com.ibm.oti.connection.CreateConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -21,38 +23,43 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /*
- *   用于单台cabin的整体实验状态同步
- * */
+*   监控服务器专用WebSocket服务器
+* */
+@ServerEndpoint("/websocket/monitorServer")
 @Component
-@ServerEndpoint("/websocket/experimentStatusServer")
-public class ExperimentStatusSocket {
-    private static Logger logger = LoggerFactory.getLogger(ExperimentStatusSocket.class);
+public class MonitorWebSocketServer {
+    private static Logger logger = LoggerFactory.getLogger(MonitorWebSocketServer.class);
 
     // 静态变量，用来记录当前在线连接数
     private static int onlineCount = 0;
 
-    private static final int maxRetryAttempts = 3;
-
-
     // concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
-    private static CopyOnWriteArraySet<ExperimentStatusSocket> webSocketSet = new CopyOnWriteArraySet<>();
+    private static CopyOnWriteArraySet<MonitorWebSocketServer> webSocketSet = new CopyOnWriteArraySet<>();
 
     // 存储客户端ID和对应的WebSocket对象
-    private static ConcurrentHashMap<String, ExperimentStatusSocket> clientMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, MonitorWebSocketServer> clientMap = new ConcurrentHashMap<>();
 
     // 实验状态监听器
-    private static final ExperimentStateMachine.StateChangeListener shareExperimentStateLister = new ExperimentStateMachine.StateChangeListener() {
-
+    private static final ScreenMonitor.MonitorCaptureListener monitorCaptureListener = new ScreenMonitor.MonitorCaptureListener() {
         @Override
-        public void onStateChange(ExperimentState oldState, ExperimentState newState) {
-            broadcastToAll(newState);
-        }
-
-        @Override
-        public void onError(ExperimentState errorState) {
-            broadcastToAll(errorState);
+        public void onCaptured(String type, byte[] imageData) {
+            for (MonitorWebSocketServer client : webSocketSet) {
+                if (client.clientId.contains(type)) {
+                    try {
+                        String clientId = client.clientId;
+                        client.sendMessageByteData(imageData);
+                    } catch (IOException e) {
+                        logger.error("[监控服务器]:向客户端:" + client.clientId  +" 发送屏幕捕获数据失败", e);
+                    }
+                }
+            }
         }
     };
+
+    static {
+        ScreenMonitor.addScreenCaptureListener(monitorCaptureListener);
+        CameraMonitor.addCameraCaptureListener(monitorCaptureListener);
+    }
 
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
     private Session session;
@@ -60,36 +67,9 @@ public class ExperimentStatusSocket {
     // 客户端ID
     private String clientId;
 
-    static {
-        ExperimentStateMachine.getInstance().addLister(shareExperimentStateLister);
+    public MonitorWebSocketServer() {
     }
 
-    public ExperimentStatusSocket() {
-        // 注册实验状态监听器
-        logger.info("启动实验状态控制服务器...");
-    }
-
-    private static void broadcastToAll(ExperimentState state) {
-        int attempts = maxRetryAttempts;
-
-        while (attempts > 0) {
-            for (ExperimentStatusSocket experimentStatusSocket : webSocketSet) {
-                try {
-                    experimentStatusSocket.sendMessage(generateExperimentMessage());
-                    return; // 成功发送就退出
-                } catch (Exception e) {
-                    attempts--;
-                    if (attempts == 0) {
-                        logger.error("[状态控制服务器]:向客户端:" + experimentStatusSocket.clientId +" 发送实验状态失败", e);
-                    } else {
-                        try {
-                            Thread.sleep(100); // 可以加个短延时
-                        } catch (InterruptedException ignored) {}
-                    }
-                }
-            }
-        }
-    }
 
     /**
      * 连接建立成功调用的方法
@@ -117,11 +97,8 @@ public class ExperimentStatusSocket {
         webSocketSet.add(this); // 加入set中
         clientMap.put(clientId, this); // 加入clientMap中
         addOnlineCount(); // 在线数加1
-        logger.info("[状态控制服务器]:有新连接加入！当前在线人数为" + getOnlineCount());
-        logger.info("[状态控制服务器]:新连接的客户端ID：" + clientId);
-
-        // 连接建立后，发送当前实验状态给新连接的客户端
-        this.sendMessage(generateExperimentMessage());
+        logger.info("[监控服务器]:有新连接加入！当前在线人数为" + getOnlineCount());
+        logger.info("[监控服务器]:新连接的客户端ID：" + clientId);
     }
 
     /**
@@ -132,7 +109,7 @@ public class ExperimentStatusSocket {
         webSocketSet.remove(this); // 从set中删除
         clientMap.remove(this.clientId); // 从clientMap中删除
         subOnlineCount(); // 在线数减1
-        logger.info("[状态控制服务器]:" + this.clientId + "连接关闭！当前在线人数为" + getOnlineCount());
+        logger.info("[监控服务器]:" + this.clientId + "连接关闭！当前在线人数为" + getOnlineCount());
     }
 
     /**
@@ -143,7 +120,7 @@ public class ExperimentStatusSocket {
     @OnMessage
     public void onMessage(String message, Session session) {
         String clientId = this.clientId;
-        logger.info("[状态控制服务器]:来自客户端用户" + clientId + "的消息:" + message);
+        logger.info("[监控服务器]:来自客户端用户" + clientId + "的消息:" + message);
         //只要是信息就要改变服务器状态
 //        String[] messageArr = message.split(" ");
 //        //修改数据信息
@@ -151,7 +128,7 @@ public class ExperimentStatusSocket {
 //        ExperimentStatus.status = messageArr[1];
 
 //      群发消息
-//        for (ExperimentStatusSocket item : webSocketSet) {
+//        for (MonitorWebSocketServer item : webSocketSet) {
 //            try {
 //                System.out.println("[状态控制服务器]:向客户端用户" + clientId + "发送消息:" + message);
 //                item.sendMessage(message);
@@ -168,7 +145,7 @@ public class ExperimentStatusSocket {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        logger.error("[状态控制服务器]:发生错误", error);
+        logger.error("[监控服务器]:发生错误", error);
         error.printStackTrace();
     }
 
@@ -181,25 +158,29 @@ public class ExperimentStatusSocket {
         this.session.getBasicRemote().sendText(message);
     }
 
+    public void sendMessageByteData(byte[] byteData) throws IOException {
+        this.session.getBasicRemote().sendBinary(java.nio.ByteBuffer.wrap(byteData));
+    }
+
     public static synchronized int getOnlineCount() {
         return onlineCount;
     }
 
     public static synchronized void addOnlineCount() {
-        ExperimentStatusSocket.onlineCount++;
+        MonitorWebSocketServer.onlineCount++;
     }
 
     public static synchronized void subOnlineCount() {
-        ExperimentStatusSocket.onlineCount--;
+        MonitorWebSocketServer.onlineCount--;
     }
 
-    public static CopyOnWriteArraySet<ExperimentStatusSocket> getWebSocketSet() {
+    public static CopyOnWriteArraySet<MonitorWebSocketServer> getWebSocketSet() {
         return webSocketSet;
     }
 
     public static void setWebSocketSet(
-            CopyOnWriteArraySet<ExperimentStatusSocket> webSocketSet) {
-        ExperimentStatusSocket.webSocketSet = webSocketSet;
+            CopyOnWriteArraySet<MonitorWebSocketServer> webSocketSet) {
+        MonitorWebSocketServer.webSocketSet = webSocketSet;
     }
 
     public Session getSession() {
@@ -210,8 +191,8 @@ public class ExperimentStatusSocket {
         this.session = session;
     }
 
-    private static String generateExperimentMessage() {
-        ExperimentStateMessage experimentStateMessage = new ExperimentStateMessage(AppIdentity.getIdentity(),ExperimentProperties.experimentId,ExperimentProperties.state);
+    private String generateMonitorData() {
+        ExperimentStateMessage experimentStateMessage = new ExperimentStateMessage(AppIdentity.getIdentity(), ExperimentProperties.experimentId,ExperimentProperties.state);
         return JSON.toJSONString(experimentStateMessage);
 
 //        StringBuilder sb = new StringBuilder();

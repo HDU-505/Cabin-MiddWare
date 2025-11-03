@@ -1,4 +1,4 @@
-package com.hdu.neurostudent_signalflow.service;
+package com.hdu.neurostudent_signalflow.service.Impl;
 
 import com.hdu.neurostudent_signalflow.utils.mqtt.MqttSendClient;
 import com.hdu.neurostudent_signalflow.utils.websocket.MindtoothWebSocketClient;
