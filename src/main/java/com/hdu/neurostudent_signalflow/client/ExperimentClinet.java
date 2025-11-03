@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+// 暂时弃用
 @FeignClient(name = "service-work-station-8080", url = "http://127.0.0.1:8080", configuration = FeignClientConfig.class)
 public interface ExperimentClinet {
     @GetMapping("/experiment/endExperiment/{experiment_id}")

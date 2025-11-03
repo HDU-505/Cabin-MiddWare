@@ -5,6 +5,8 @@ import com.hdu.neurostudent_signalflow.client.ExperimentClinet;
 import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.config.ParadigmConfig;
 import com.hdu.neurostudent_signalflow.devicelister.DeviceLister;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentEvent;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
 import com.hdu.neurostudent_signalflow.utils.timestamp.TimestampSyncUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +125,8 @@ public class ParadigmLister extends DeviceLister {
 
                 if (data[1] == 255.0) {
                     if (ExperimentProperties.experimentId != null)
-                        experimentClinet.endExperiment(ExperimentProperties.experimentId);
+//                        experimentClinet.endExperiment(ExperimentProperties.experimentId);
+                        ExperimentStateMachine.getInstance().handleEvent(ExperimentEvent.END_EXPERIMENT);
                     else
                         logger.error("实验ID为空，无法结束实验");
                 }
