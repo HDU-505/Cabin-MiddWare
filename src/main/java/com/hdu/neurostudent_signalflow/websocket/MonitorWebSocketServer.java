@@ -5,7 +5,9 @@ import com.hdu.neurostudent_signalflow.config.AppIdentity;
 import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentState;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
+import com.hdu.neurostudent_signalflow.monitor.CameraMonitor;
 import com.hdu.neurostudent_signalflow.monitor.ScreenMonitor;
+import com.ibm.oti.connection.CreateConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -38,23 +40,25 @@ public class MonitorWebSocketServer {
     private static ConcurrentHashMap<String, MonitorWebSocketServer> clientMap = new ConcurrentHashMap<>();
 
     // 实验状态监听器
-    private static final ScreenMonitor.ScreenCaptureListener screenCaptureListener = new ScreenMonitor.ScreenCaptureListener() {
+    private static final ScreenMonitor.MonitorCaptureListener monitorCaptureListener = new ScreenMonitor.MonitorCaptureListener() {
         @Override
-        public void onScreenCaptured(byte[] imageData) {
+        public void onCaptured(String type, byte[] imageData) {
             for (MonitorWebSocketServer client : webSocketSet) {
-                try {
-                    System.out.println("hello");
-                    String clientId = client.clientId;
-                    client.sendMessageByteData(imageData);
-                } catch (IOException e) {
-                    logger.error("[监控服务器]:向客户端:" + client.clientId  +" 发送屏幕捕获数据失败", e);
+                if (client.clientId.contains(type)) {
+                    try {
+                        String clientId = client.clientId;
+                        client.sendMessageByteData(imageData);
+                    } catch (IOException e) {
+                        logger.error("[监控服务器]:向客户端:" + client.clientId  +" 发送屏幕捕获数据失败", e);
+                    }
                 }
             }
         }
     };
 
     static {
-        ScreenMonitor.addScreenCaptureListener(screenCaptureListener);
+        ScreenMonitor.addScreenCaptureListener(monitorCaptureListener);
+        CameraMonitor.addCameraCaptureListener(monitorCaptureListener);
     }
 
     // 与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -64,9 +68,8 @@ public class MonitorWebSocketServer {
     private String clientId;
 
     public MonitorWebSocketServer() {
-        // 注册监控状态监听器
-        logger.info("启动实验状态控制服务器...");
     }
+
 
     /**
      * 连接建立成功调用的方法

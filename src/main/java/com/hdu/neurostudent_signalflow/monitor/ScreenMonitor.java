@@ -18,9 +18,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
-public class ScreenMonitor {
+public class ScreenMonitor extends BaseMonitor {
     private static final int DEFAULT_TIME_INTERVAL = 500;
     private static final long SHUTDOWN_TIMEOUT = 10;
+    private static final String type = "screen";
 
     // 线程安全状态管理
     private static final AtomicInteger isRunning = new AtomicInteger(0);
@@ -54,7 +55,7 @@ public class ScreenMonitor {
             });
 
     private static ScheduledFuture<?> monitorFuture;
-    private static final CopyOnWriteArrayList<ScreenCaptureListener> listeners =
+    private static final CopyOnWriteArrayList<MonitorCaptureListener> listeners =
             new CopyOnWriteArrayList<>();
 
     private ScreenMonitor() {}
@@ -182,9 +183,9 @@ public class ScreenMonitor {
      */
     private static void notifyListeners(byte[] imageData) {
         if (!listeners.isEmpty()) {
-            for (ScreenCaptureListener listener : listeners) {
+            for (MonitorCaptureListener listener : listeners) {
                 try {
-                    listener.onScreenCaptured(imageData);
+                    listener.onCaptured(type,imageData);
                 } catch (Exception e) {
                     log.error("监听器处理截图时发生异常: {}", e.getMessage(), e);
                 }
@@ -245,7 +246,7 @@ public class ScreenMonitor {
         );
     }
 
-    public static boolean addScreenCaptureListener(ScreenCaptureListener listener) {
+    public static boolean addScreenCaptureListener(MonitorCaptureListener listener) {
         if (listener != null && !listeners.contains(listener)) {
             listeners.add(listener);
             log.debug("添加截图监听器: {}", listener.getClass().getSimpleName());
@@ -254,7 +255,7 @@ public class ScreenMonitor {
         return false;
     }
 
-    public static boolean removeScreenCaptureListener(ScreenCaptureListener listener) {
+    public static boolean removeScreenCaptureListener(MonitorCaptureListener listener) {
         boolean removed = listeners.remove(listener);
         if (removed) {
             log.debug("移除截图监听器: {}", listener.getClass().getSimpleName());
@@ -457,12 +458,6 @@ public class ScreenMonitor {
             ImageIO.write(image, "png", baos);
             return baos.toByteArray();
         }
-    }
-
-    // ==================== 原有的内部类和接口 ====================
-
-    public interface ScreenCaptureListener {
-        void onScreenCaptured(byte[] imageData);
     }
 
     public static class MonitorStats {

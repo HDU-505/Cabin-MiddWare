@@ -15,7 +15,23 @@ public class MonitorController {
     private MonitorService monitorService;
 
     @GetMapping("/startScreenMonitor")
-    public void playMusic() {
+    public void startScreenMonitor() {
         monitorService.startScreenMonitor();
     }
+
+    @GetMapping("/stopScreenMonitor")
+    public void stopScreenMonitor() {
+        monitorService.stopScreenMonitor();
+    }
+
+    @GetMapping("/startCameraMonitor")
+    public void startCameraMonitor() {
+         monitorService.startCameraMonitor();
+    }
+
+    @GetMapping("/stopCameraMonitor")
+    public void stopCameraMonitor() {
+         monitorService.stopCameraMonitor();
+    }
 }
+
