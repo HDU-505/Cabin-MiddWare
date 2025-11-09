@@ -99,9 +99,9 @@ public class MindToothDataLister implements Runnable {
 
 //                mindToothDeviceAdatper.processData(data);
                 // 数据可靠性测试
-                if (mindToothProperties.isTestEnable()) {
-                    writeData2TestFile(data);
-                }
+//                if (mindToothProperties.isTestEnable()) {
+//                    writeData2TestFile(data);
+//                }
                 recvData.add(data);
             }
 

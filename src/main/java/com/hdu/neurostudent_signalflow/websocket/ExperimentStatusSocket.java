@@ -3,6 +3,7 @@ package com.hdu.neurostudent_signalflow.websocket;
 import com.alibaba.fastjson.JSON;
 import com.hdu.neurostudent_signalflow.config.AppIdentity;
 import com.hdu.neurostudent_signalflow.config.ExperimentProperties;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentEvent;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentState;
 import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
 import org.slf4j.Logger;
@@ -44,13 +45,13 @@ public class ExperimentStatusSocket {
     private static final ExperimentStateMachine.StateChangeListener shareExperimentStateLister = new ExperimentStateMachine.StateChangeListener() {
 
         @Override
-        public void onStateChange(ExperimentState oldState, ExperimentState newState) {
-            broadcastToAll(newState);
+        public void onStateChange(ExperimentState oldState, ExperimentState newState, ExperimentEvent event) {
+            broadcastToAll(newState,event);
         }
 
         @Override
-        public void onError(ExperimentState errorState) {
-            broadcastToAll(errorState);
+        public void onError(ExperimentState errorState,ExperimentEvent event) {
+            broadcastToAll(errorState,event);
         }
     };
 
@@ -69,14 +70,14 @@ public class ExperimentStatusSocket {
         logger.info("启动实验状态控制服务器...");
     }
 
-    private static void broadcastToAll(ExperimentState state) {
+    private static void broadcastToAll(ExperimentState state,ExperimentEvent event) {
         int attempts = maxRetryAttempts;
-
-        while (attempts > 0) {
-            for (ExperimentStatusSocket experimentStatusSocket : webSocketSet) {
+        for (ExperimentStatusSocket experimentStatusSocket : webSocketSet) {
+            while (attempts > 0) {
                 try {
-                    experimentStatusSocket.sendMessage(generateExperimentMessage());
-                    return; // 成功发送就退出
+                    logger.info("[状态控制服务器]:向客户端:" + experimentStatusSocket.clientId +" 发送实验状态:" + state);
+                    experimentStatusSocket.sendMessage(generateExperimentMessage(state,event));
+                    break;
                 } catch (Exception e) {
                     attempts--;
                     if (attempts == 0) {
@@ -121,7 +122,7 @@ public class ExperimentStatusSocket {
         logger.info("[状态控制服务器]:新连接的客户端ID：" + clientId);
 
         // 连接建立后，发送当前实验状态给新连接的客户端
-        this.sendMessage(generateExperimentMessage());
+        this.sendMessage(generateExperimentMessage(ExperimentProperties.state,null));
     }
 
     /**
@@ -210,8 +211,8 @@ public class ExperimentStatusSocket {
         this.session = session;
     }
 
-    private static String generateExperimentMessage() {
-        ExperimentStateMessage experimentStateMessage = new ExperimentStateMessage(AppIdentity.getIdentity(),ExperimentProperties.experimentId,ExperimentProperties.state);
+    private static String generateExperimentMessage(ExperimentState state,ExperimentEvent event) {
+        ExperimentStateMessage experimentStateMessage = new ExperimentStateMessage(AppIdentity.getIdentity(), state,event, ExperimentProperties.experiment);
         return JSON.toJSONString(experimentStateMessage);
 
 //        StringBuilder sb = new StringBuilder();

@@ -33,3 +33,5 @@ build/
 .vscode/
 src/main/resources/testData
 src/main/java/com/hdu/neurostudent_signalflow/controller/Test.java
+temp/
+src/main/resources/testData/

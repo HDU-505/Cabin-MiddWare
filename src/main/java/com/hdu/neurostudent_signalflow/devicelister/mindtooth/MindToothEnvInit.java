@@ -1,6 +1,8 @@
 package com.hdu.neurostudent_signalflow.devicelister.mindtooth;
 
 import com.hdu.neurostudent_signalflow.config.MindToothProperties;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentEvent;
+import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -99,6 +101,7 @@ public class MindToothEnvInit implements Runnable{
                     return ;
                 }
                 pythonRetryCount++;
+                Thread.sleep(1000);
             } catch (IOException | InterruptedException e) {
                 logger.error("mindtooth-python操作程序启动失败...");
                 e.printStackTrace();
@@ -110,6 +113,7 @@ public class MindToothEnvInit implements Runnable{
             }
         }
         logger.error("mindtooth-python操作程序启动失败，已达到最大重试次数");
+        ExperimentStateMachine.getInstance().handleEvent(ExperimentEvent.ERROR_OCCURED);
     }
 
     // 启动mindtooth的SDK
@@ -140,12 +144,14 @@ public class MindToothEnvInit implements Runnable{
                     return ;
                 }
                 sdkRetryCount++;
+                Thread.sleep(1000); // 等待1秒以确保SDK完全启动
             } catch (IOException | InterruptedException e) {
                 logger.error("mindtooth-SDK启动失败... \n {}",e.getMessage());
                 sdkRetryCount++;
             }
         }
         logger.error("mindtooth-SDK启动失败，已达到最大重试次数");
+        ExperimentStateMachine.getInstance().handleEvent(ExperimentEvent.ERROR_OCCURED);
     }
 
     public void shutdown() {

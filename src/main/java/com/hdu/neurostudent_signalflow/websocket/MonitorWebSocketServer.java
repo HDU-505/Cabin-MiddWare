@@ -68,6 +68,7 @@ public class MonitorWebSocketServer {
     private String clientId;
 
     public MonitorWebSocketServer() {
+        logger.info("视频监控服务器启动...");
     }
 
 
@@ -191,17 +192,4 @@ public class MonitorWebSocketServer {
         this.session = session;
     }
 
-    private String generateMonitorData() {
-        ExperimentStateMessage experimentStateMessage = new ExperimentStateMessage(AppIdentity.getIdentity(), ExperimentProperties.experimentId,ExperimentProperties.state);
-        return JSON.toJSONString(experimentStateMessage);
-
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("experimentId").append("=");
-//        sb.append(ExperimentProperties.experimentId).append("&");
-//        sb.append("state").append("=");
-//        sb.append(ExperimentProperties.state).append("&");
-//        sb.append("experimentInfo").append("=");
-//        sb.append(JSON.toJSONString(ExperimentProperties.experiment));
-//        return sb.toString();
-    }
 }

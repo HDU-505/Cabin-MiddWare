@@ -6,5 +6,6 @@ public enum ExperimentEvent {
     PAUSE_EXPERIMENT,   // 暂停实验
     RESUME_EXPERIMENT,  // 恢复实验
     END_EXPERIMENT,     // 结束实验
+    RESET_EXPERIMENT,   // 重置实验
     ERROR_OCCURED       // 发生异常
 }

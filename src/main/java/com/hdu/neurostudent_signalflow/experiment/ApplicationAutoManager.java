@@ -18,13 +18,13 @@ public class ApplicationAutoManager {
 
     private final ExperimentStateMachine.StateChangeListener stateChangeListener = new ExperimentStateMachine.StateChangeListener() {
         @Override
-        public void onStateChange(ExperimentState oldState, ExperimentState newState) {
-            handleStateChange(newState);
+        public void onStateChange(ExperimentState oldState, ExperimentState newState,ExperimentEvent event) {
+            handleStateChange(newState,event);
         }
 
         @Override
-        public void onError(ExperimentState errorState) {
-            handleStateChange(errorState);
+        public void onError(ExperimentState errorState,ExperimentEvent event) {
+            handleStateChange(errorState,event);
         }
     };
 
@@ -34,7 +34,7 @@ public class ApplicationAutoManager {
     }
 
     // 处理状态转变逻辑
-    private void handleStateChange(ExperimentState state) {
+    private void handleStateChange(ExperimentState state, ExperimentEvent event) {
         // 根据状态变化执行相应的操作
         switch (state) {
             case ERROR: {

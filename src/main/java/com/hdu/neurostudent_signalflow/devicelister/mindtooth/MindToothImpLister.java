@@ -66,8 +66,8 @@ public class MindToothImpLister implements Runnable{
                 //data最后一个值表示当前的时间戳
                 data[size+1] = System.currentTimeMillis();
                 //将数据存储到该队列中
-                recvData.add(data);
-//                mindtoothWebSocketClient.send(Arrays.toString(sample));
+//                recvData.add(data);
+                mindtoothWebSocketClient.send(Arrays.toString(sample));
             }
         } catch(Exception e) {
             logger.error("mindtooth阻抗值监听程序异常..." + e);
