@@ -8,14 +8,20 @@ import com.hdu.neurostudent_signalflow.experiment.ExperimentStateMachine;
 import com.hdu.neurostudent_signalflow.service.ParadigmService;
 import com.hdu.neurostudent_signalflow.utils.ConfigManager;
 import com.hdu.neurostudent_signalflow.utils.IdGenerator;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 @Service
@@ -139,66 +145,66 @@ public class ParadigmServiceImpl implements ParadigmService {
         // 获取范式文件
         String filePath = ParadigmConfig.PARADIGM.getFilePath();
         // 创建临时目录
-//        String tempDirPath = "H:\\doing\\NeuroStudent_SignalFlow\\NeuroStudent_SignalFlow\\temp";
-//        // 测试阶段的目录
-////        String tempDirPath = "D:\\code\\middleware\\temp";
-//        Path tempDir = null;
-//        try {
-//            tempDir = Files.createDirectories(Paths.get(tempDirPath));
-//            // 解压zip文件
-//            try (ZipFile zipFile = new ZipFile(new File(filePath))) {
-//                Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
-//                while (entries.hasMoreElements()) {
-//                    ZipArchiveEntry entry = entries.nextElement();
-//                    if (entry.isDirectory()) {
-//                        // 创建目录
-//                        Path dirPath = tempDir.resolve(entry.getName());
-//                        Files.createDirectories(dirPath);
-//                        System.out.println("Created directory: " + dirPath);
-//                    } else {
-//                        // 创建文件
-//                        Path filePath1 = tempDir.resolve(entry.getName());
-//                        Files.createDirectories(filePath1.getParent());
-//                        try (InputStream inputStream = zipFile.getInputStream(entry);
-//                             FileOutputStream outputStream = new FileOutputStream(filePath1.toFile())) {
-//                            IOUtils.copy(inputStream, outputStream);
-//                        } catch (IOException e) {
-//                            // 处理读取或写入文件时的异常
-//                            System.out.println("Failed to extract file: " + entry.getName());
-//                            e.printStackTrace();
-//                        }
-//                        System.out.println("Created file: " + filePath);
-//                    }
-//                }
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // 执行范式
-//        // 检查文件夹中是否存在start.py文件,没有则返回False
-//        File startFile = new File(tempDirPath + "/start.py");
-//        System.out.println(tempDirPath + "/start.py");
-//        if (!startFile.exists()) {
-//            System.out.println("不存在启动文件");
-//            return false;
-//        }
-        startEprimeFile(filePath);
+        String tempDirPath = "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\temp";
+        // 测试阶段的目录
+//        String tempDirPath = "D:\\code\\middleware\\temp";
+        Path tempDir = null;
+        try {
+            tempDir = Files.createDirectories(Paths.get(tempDirPath));
+            // 解压zip文件
+            try (ZipFile zipFile = new ZipFile(new File(filePath))) {
+                Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
+                while (entries.hasMoreElements()) {
+                    ZipArchiveEntry entry = entries.nextElement();
+                    if (entry.isDirectory()) {
+                        // 创建目录
+                        Path dirPath = tempDir.resolve(entry.getName());
+                        Files.createDirectories(dirPath);
+                        System.out.println("Created directory: " + dirPath);
+                    } else {
+                        // 创建文件
+                        Path filePath1 = tempDir.resolve(entry.getName());
+                        Files.createDirectories(filePath1.getParent());
+                        try (InputStream inputStream = zipFile.getInputStream(entry);
+                             FileOutputStream outputStream = new FileOutputStream(filePath1.toFile())) {
+                            IOUtils.copy(inputStream, outputStream);
+                        } catch (IOException e) {
+                            // 处理读取或写入文件时的异常
+                            System.out.println("Failed to extract file: " + entry.getName());
+                            e.printStackTrace();
+                        }
+                        System.out.println("Created file: " + filePath);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 执行范式
+        // 检查文件夹中是否存在start.py文件,没有则返回False
+        File startFile = new File(tempDirPath + "/start.py");
+        System.out.println(tempDirPath + "/start.py");
+        if (!startFile.exists()) {
+            System.out.println("不存在启动文件");
+            return false;
+        }
+//        startEprimeFile(filePath);
         // 执行文件
         // 启动新线程运行 Python 脚本
-//        Thread thread = new Thread(() -> {
-//            try {
-//                System.out.println("开始执行范式");
-//                //开发阶段的环境
-//                ProcessBuilder processBuilder = new ProcessBuilder("python", startFile.getAbsolutePath());
-//                //测试阶段的环境
-////                ProcessBuilder processBuilder = new ProcessBuilder("D:\\enviroment_program\\python39\\python", startFile.getAbsolutePath());
-//                processBuilder.start();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//        thread.start();
+        Thread thread = new Thread(() -> {
+            try {
+                System.out.println("开始执行范式");
+                //开发阶段的环境
+                ProcessBuilder processBuilder = new ProcessBuilder("python", startFile.getAbsolutePath());
+                //测试阶段的环境
+//                ProcessBuilder processBuilder = new ProcessBuilder("D:\\enviroment_program\\python39\\python", startFile.getAbsolutePath());
+                processBuilder.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
         return true;
     }
 

@@ -29,7 +29,7 @@ if use_eeg:
     outlet_command2EEGapp = StreamOutlet(info_command2EEGapp)
 
 # WebSocket 服务器 URL
-ws_url = "ws://127.0.0.1:8888/websocket/w"
+ws_url = "ws://127.0.0.1:8888/websocket/messageServer?username=touch_screen"
 
 # 设置重试间隔时间（秒）
 RETRY_INTERVAL = 5

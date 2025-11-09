@@ -47,6 +47,7 @@ public class ParadigmController {
      * */
     @GetMapping("/getAllParadigm")
     public List<ParadigmTouchScreen> getAllParadigm(){
+        logger.info("Fetching all paradigm information");
         // 处理逻辑
         return paradigmService.getAllParadigm();
     }

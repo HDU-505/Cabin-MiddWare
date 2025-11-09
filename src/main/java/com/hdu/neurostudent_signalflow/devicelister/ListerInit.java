@@ -36,11 +36,11 @@ public class ListerInit implements CommandLineRunner {
 //        Thread commThread = new Thread(commDeviceLister);
 //        commThread.start();
         //启动MindTOOTH监听程序
-//        Thread mindtoothThread = new Thread(mindToothDeviceLister);
-//        mindtoothThread.start();
+        Thread mindtoothThread = new Thread(mindToothDeviceLister);
+        mindtoothThread.start();
         //启动label监听程序
-//        Thread paradigmThread = new Thread(paradigmLister);
-//        paradigmThread.start();
+        Thread paradigmThread = new Thread(paradigmLister);
+        paradigmThread.start();
     }
 
 }

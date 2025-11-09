@@ -31,6 +31,10 @@ public class DataTransmitService {
 
     private final ExecutorService consumer = Executors.newSingleThreadExecutor();
 
+    public void addQueue(BlockingQueue <String> sendQueue) {
+        this.sendQueue = sendQueue;
+    }
+
     public void start() {
         consumer.submit(() -> {
             while (!Thread.currentThread().isInterrupted()) {
@@ -51,6 +55,6 @@ public class DataTransmitService {
 
     private void DataTran(String data) {
         mqttSendClient.publish(false, "test", data);
-        mindtoothWebSocketClient.send(data);
+//        mindtoothWebSocketClient.send(data);
     }
 }

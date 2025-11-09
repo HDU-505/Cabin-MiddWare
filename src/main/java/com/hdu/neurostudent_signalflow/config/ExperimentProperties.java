@@ -8,5 +8,5 @@ import java.util.Date;
 public class ExperimentProperties {
     public static String experimentId = "OFFLINE";
     public static ExperimentState state;
-    public static Experiment experiment;
+    public static Experiment experiment = new Experiment();
 }

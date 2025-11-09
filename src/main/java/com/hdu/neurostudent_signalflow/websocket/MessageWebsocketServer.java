@@ -2,6 +2,7 @@ package com.hdu.neurostudent_signalflow.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.bytedeco.librealsense.error;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -95,43 +96,50 @@ public class MessageWebsocketServer {
     @OnMessage
     public void onMessage(String message, Session session) {
         String clientId = this.clientId;
-        logger.info("[数据传输服务器]:来自客户端用户" + clientId + "的消息:" + message);
+        for (MessageWebsocketServer item : webSocketSet) {
+            try {
+                item.sendMessage(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         // 解析json消息
-        WebSocketMessage webSocketMessage = JSON.parseObject(message, WebSocketMessage.class);
-        if (webSocketMessage == null) {
-            logger.error("[数据传输服务器]:无法解析客户端用户" + clientId + "的消息:" + message);
-            return;
-        }
+//        WebSocketMessage webSocketMessage = JSON.parseObject(message, WebSocketMessage.class);
 
-        if (webSocketMessage.getTo().isEmpty()) {
-            logger.error("[数据传输服务器]:消息接收方为空，无法发送消息:" + message);
-            return;
-        }
-        if (webSocketMessage.getTo().equals("all")) {
-            // 群发消息
-            for (MessageWebsocketServer item : webSocketSet) {
-                try {
-                    System.out.println("[数据传输服务器]:向客户端用户" + item.clientId + "发送消息:" + message);
-                    item.sendMessage(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return;
-        } else {
-            // 发送给指定客户端
-            MessageWebsocketServer toClient = clientMap.get(webSocketMessage.getTo());
-            if (toClient != null) {
-                try {
-                    System.out.println("[数据传输服务器]:向客户端用户" + toClient.clientId + "发送消息:" + message);
-                    toClient.sendMessage(message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                logger.error("[数据传输服务器]:找不到指定的接收方客户端:" + webSocketMessage.getTo());
-            }
-        }
+//        if (webSocketMessage == null) {
+//            logger.error("[数据传输服务器]:无法解析客户端用户" + clientId + "的消息:" + message);
+//            return;
+//        }
+//
+//        if (webSocketMessage.getTo().isEmpty()) {
+//            logger.error("[数据传输服务器]:消息接收方为空，无法发送消息:" + message);
+//            return;
+//        }
+//        if (webSocketMessage.getTo().equals("all")) {
+//            // 群发消息
+//            for (MessageWebsocketServer item : webSocketSet) {
+//                try {
+//                    System.out.println("[数据传输服务器]:向客户端用户" + item.clientId + "发送消息:" + message);
+//                    item.sendMessage(message);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            return;
+//        } else {
+//            // 发送给指定客户端
+//            MessageWebsocketServer toClient = clientMap.get(webSocketMessage.getTo());
+//            if (toClient != null) {
+//                try {
+//                    System.out.println("[数据传输服务器]:向客户端用户" + toClient.clientId + "发送消息:" + message);
+//                    toClient.sendMessage(message);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                logger.error("[数据传输服务器]:找不到指定的接收方客户端:" + webSocketMessage.getTo());
+//            }
+//        }
     }
 
     /**

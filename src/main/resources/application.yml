@@ -3,10 +3,10 @@ server:
   port: 8888
 # MQTT配置
 mqtt:
-  mqttEnabled: false  # 是否启用
-  hostUrl: tcp://127.0.0.1:1883
-  username: admin
-  password: admin
+  mqttEnabled: true  # 是否启用
+  hostUrl: tcp://47.92.113.148:1883
+  username: cabin
+  password: Dzl010799
   client-id: MQTT-CLIENT-SIGNAL-FLOW-1
   cleanSession: true
   reconnect: true
@@ -29,7 +29,7 @@ mindtooth:
   impChannels: 10
   processThread: 5
   impedance_or_data: 1
-  max_retry_count: 5
+  max_retry_count: 100
   python_path: "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\src\\main\\resources\\SDK\\EegAmpApp\\startPython.bat"
   sdk_path: "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\src\\main\\resources\\SDK\\EegAmpApp\\startEegAmpApp.bat"
   testEnable: true
@@ -53,7 +53,7 @@ loader:
 
 # music配置
 music:
-  music-folder: F:\\NeuroX-2.0\\enviroment\\music
+  music-folder: D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\music
 
 # gazepoint配置
 gazepoint:

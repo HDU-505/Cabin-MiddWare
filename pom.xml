@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.fazecast</groupId>
             <artifactId>jSerialComm</artifactId>
-            <version>[2.0.0,3.0.0)</version>
+            <version>2.9.3</version> <!-- 使用最新版本 -->
         </dependency>
 
         <!--其他工具类依赖 -->

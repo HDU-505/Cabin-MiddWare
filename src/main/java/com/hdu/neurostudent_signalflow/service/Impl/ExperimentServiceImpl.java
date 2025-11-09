@@ -31,10 +31,6 @@ public class ExperimentServiceImpl implements IExperimentService {
 
     @Override
     public String createExperiment(Experiment experiment) {
-        //判断是否当前有实验在进行中
-        if (ExperimentProperties.experiment != null) {
-            return null;
-        }
         //首先判断信息是否完整
         if (experiment == null) return null;
         if (experiment.getName() == null
@@ -58,14 +54,12 @@ public class ExperimentServiceImpl implements IExperimentService {
     @Override
     public boolean startExperiment(String experimentId) {
         //判断实验id是否正确
-        if (ExperimentProperties.experimentId.equals(experimentId)) {
-            //判断当前实验状态是否为“等待”
-            if (experimentStateMachine.handleEvent(ExperimentEvent.START_EXPERIMENT)) {
+        if (ExperimentProperties.experimentId.equals(experimentId) && experimentStateMachine.handleEvent(ExperimentEvent.START_EXPERIMENT)) {
                 //设置实验开始时间
                 ExperimentProperties.experiment.setStartTime(new Date());
                 return true;
             }
-        }
+
         return false;
     }
 

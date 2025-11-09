@@ -46,6 +46,7 @@ public class ExperimentController {
     @GetMapping("/startExperiment/{experiment_id}")
     public R startExperiment(@PathVariable String experiment_id) {
         //开始实验处理过程
+        System.out.println("Starting experiment with ID: " + experiment_id);
         boolean flag = experimentService.startExperiment(experiment_id);
         return flag ? R.ok() : R.error();
     }

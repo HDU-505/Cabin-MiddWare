@@ -52,7 +52,8 @@ public class ExperimentStateMachine {
 
         // ENDED 状态（终态）
         transitionTable.put(ExperimentState.ENDED, Map.of(
-                ExperimentEvent.ERROR_OCCURED, ExperimentState.ERROR
+                ExperimentEvent.ERROR_OCCURED, ExperimentState.ERROR,
+                ExperimentEvent.RESET_EXPERIMENT, ExperimentState.NOT_STARTED
         ));
 
         // ERROR 状态（终态）
@@ -79,10 +80,15 @@ public class ExperimentStateMachine {
 
         // 通知监听器状态变化
         for (StateChangeListener listener : listeners) {
-            listener.onStateChange(prevState, nextState);
-            if (nextState == ExperimentState.ERROR) {
-                listener.onError(nextState);
-            }
+            ExperimentState finalPrevState = prevState;
+            ExperimentState finalNextState = nextState;
+            new Thread(() -> {
+                if (finalNextState == ExperimentState.ERROR) {
+                    listener.onError(finalNextState,event);
+                    return ;
+                }
+                listener.onStateChange(finalPrevState, finalNextState,event);
+            }).start();
         }
         System.out.println("State changed: " + prevState + " → " + nextState);
         return true;
@@ -109,7 +115,7 @@ public class ExperimentStateMachine {
         if (prevState == ExperimentState.ENDED || prevState == ExperimentState.ERROR) {
             currentState.set(ExperimentState.NOT_STARTED);
             for (StateChangeListener listener : listeners) {
-                listener.onStateChange(prevState, ExperimentState.NOT_STARTED);
+                listener.onStateChange(prevState, ExperimentState.ERROR, ExperimentEvent.ERROR_OCCURED);
             }
             System.out.println("State reset: " + prevState + " → NOT_STARTED");
             return true;
@@ -119,7 +125,7 @@ public class ExperimentStateMachine {
     }
 
     public interface StateChangeListener {
-        void onStateChange(ExperimentState oldState, ExperimentState newState);     // 新增状态变化监听方法
-        void onError(ExperimentState errorState);   // 新增错误处理方法
+        void onStateChange(ExperimentState oldState, ExperimentState newState, ExperimentEvent event);     // 新增状态变化监听方法
+        void onError(ExperimentState errorState, ExperimentEvent event);   // 新增错误处理方法
     }
 }

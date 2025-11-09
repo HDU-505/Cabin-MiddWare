@@ -56,11 +56,11 @@ public class MindToothOperator {
 
     public void EEGData2UnifyData(double[] sig_data) {
         try {
-            logger.info("[当前处理线程：]"+Thread.currentThread());
-            logger.info("[当前处理线程：]"+ num++ + "   "+Thread.currentThread()+"处理的数据序号为："+ sig_data[sig_data.length-1]);
-            if (mindToothProperties.isTestEnable()) {
-                writeData2TestFile(sig_data);
-            }
+//            logger.info("[当前处理线程：]"+Thread.currentThread());
+//            logger.info("[当前处理线程：]"+ num++ + "   "+Thread.currentThread()+"处理的数据序号为："+ sig_data[sig_data.length-1]);
+//            if (mindToothProperties.isTestEnable()) {
+//                writeData2TestFile(sig_data);
+//            }
 
             // 处理数据逻辑
             int size = sig_data.length;

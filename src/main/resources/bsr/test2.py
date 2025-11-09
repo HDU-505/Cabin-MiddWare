@@ -67,7 +67,7 @@ def listen_to_websocket():
         print("WebSocket client 'NeuroClient' encountered an error:", error)
 
     ws = websocket.WebSocketApp(
-        "ws://127.0.0.1:8888/websocket/w",
+        "ws://127.0.0.1:8888/websocket/messageServer?username=mindtooth_control",
         on_message=on_message,
         on_open=on_open,
         on_close=on_close,

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 public class CameraMonitor extends BaseMonitor {
-    private static final int DEFAULT_TIME_INTERVAL = 1000;
+    private static final int DEFAULT_TIME_INTERVAL = 50;
     private static final long SHUTDOWN_TIMEOUT = 10;
     private static final String TYPE = "camera";
     private static final int DEFAULT_IMAGE_WIDTH = 1280;
