@@ -23,9 +23,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ParadigmServiceImpl implements ParadigmService {
+    private volatile Process process;
+
     private final ParadigmTouchScreen paradigmTouchScreenCache;
 
     private static final Logger logger = LoggerFactory.getLogger(ParadigmServiceImpl.class);
@@ -145,7 +148,7 @@ public class ParadigmServiceImpl implements ParadigmService {
         // 获取范式文件
         String filePath = ParadigmConfig.PARADIGM.getFilePath();
         // 创建临时目录
-        String tempDirPath = "D:\\Desktop\\code\\Cabin\\Cabin-MiddWare-DZL\\temp";
+        String tempDirPath = "temp";
         // 测试阶段的目录
 //        String tempDirPath = "D:\\code\\middleware\\temp";
         Path tempDir = null;
@@ -229,7 +232,7 @@ public class ParadigmServiceImpl implements ParadigmService {
             processBuilder.redirectErrorStream(true);
 
             // 启动外部应用程序
-            Process process = processBuilder.start();
+            process = processBuilder.start();
             processes.add(process);
 
             // 读取外部应用程序的输出流
@@ -249,6 +252,27 @@ public class ParadigmServiceImpl implements ParadigmService {
             e.printStackTrace();
         }
     }
+
+    public void stopParadigm() {
+        // 检查进程是否正在运行
+        if (process != null && process.isAlive()) {
+            // 中断进程
+            process.destroyForcibly(); // 强制终止进程
+            try {
+                // 等待进程终止
+                process.waitFor(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                logger.error("等待进程终止时被中断", e);
+            }
+            logger.info("Python 进程已被终止");
+        } else {
+            logger.warn("没有正在运行的 Python 进程可供终止");
+        }
+        // 重置进程引用
+        process = null;
+    }
+
 
 
     /*

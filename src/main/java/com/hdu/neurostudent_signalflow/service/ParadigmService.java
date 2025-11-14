@@ -17,4 +17,6 @@ public interface ParadigmService {
     boolean executeParadigm(String experiment_id);
 
     ParadigmTouchScreen getParadigmById(String id);
+
+    void stopParadigm();
 }

@@ -89,9 +89,6 @@ public class MindToothEnvInit implements Runnable{
                 // 读取外部应用程序的输出流
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
-                while ((line = reader.readLine()) != null) {
-                    logger.info("mindtooth python output: {}",line);
-                }
 
                 // 等待外部应用程序退出
                 int exitCode = process.waitFor();

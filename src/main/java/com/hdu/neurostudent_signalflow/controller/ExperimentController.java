@@ -51,4 +51,15 @@ public class ExperimentController {
         return flag ? R.ok() : R.error();
     }
 
+    /*
+     *   终止实验
+     * */
+    @GetMapping("/stopExperiment/{experiment_id}")
+    public R stopExperiment(@PathVariable String experiment_id) {
+        //开始实验处理过程
+        System.out.println("Stoping experiment with ID: " + experiment_id);
+        boolean flag = experimentService.stopExperiment(experiment_id);
+        return flag ? R.ok() : R.error();
+    }
+
 }
