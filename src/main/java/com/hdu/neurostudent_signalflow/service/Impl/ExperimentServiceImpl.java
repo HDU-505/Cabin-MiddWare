@@ -58,9 +58,15 @@ public class ExperimentServiceImpl implements IExperimentService {
                 //设置实验开始时间
                 ExperimentProperties.experiment.setStartTime(new Date());
                 return true;
-            }
+
+        }
 
         return false;
+    }
+
+    @Override
+    public boolean stopExperiment(String experimentId) {
+        return ExperimentProperties.experimentId.equals(experimentId) && experimentStateMachine.handleEvent(ExperimentEvent.RESET_EXPERIMENT);
     }
 
 }
