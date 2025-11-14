@@ -44,11 +44,11 @@ public class MindtoothWebSocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(String response) {
-        log.info("-------- 接收到服务端数据： " + response + "--------");
-        if ("acquisition".equals(response)){
-            // 开始EEG数据采集
-            TimestampSyncUtil.resetTimestamp(System.currentTimeMillis());
-        }
+//        log.info("-------- 接收到服务端数据： " + response + "--------");
+//        if ("acquisition".equals(response)){
+//            // 开始EEG数据采集
+//            TimestampSyncUtil.resetTimestamp(System.currentTimeMillis());
+//        }
     }
 
     private void scheduleReconnect() {

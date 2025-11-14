@@ -1,5 +1,6 @@
 package com.hdu.neurostudent_signalflow.experiment;
 
+import com.hdu.neurostudent_signalflow.handle.CleanHandler;
 import com.hdu.neurostudent_signalflow.handle.EndHandler;
 import com.hdu.neurostudent_signalflow.handle.ResetHandler;
 import com.hdu.neurostudent_signalflow.handle.RunningHandler;
@@ -15,6 +16,8 @@ public class ApplicationAutoManager {
     private RunningHandler runningHandler;
     @Resource
     private EndHandler endHandler;
+    @Resource
+    private CleanHandler cleanHandler;
 
     private final ExperimentStateMachine.StateChangeListener stateChangeListener = new ExperimentStateMachine.StateChangeListener() {
         @Override
@@ -50,6 +53,11 @@ public class ApplicationAutoManager {
             case ENDED: {
                 log.info("实验状态处于结束，执行结束逻辑");
                 endHandler.handleEndState();
+                break;
+            }
+            case NOT_STARTED: {
+                log.info("实验状态处于未开始，执行重置逻辑");
+                cleanHandler.handleCleanState();
                 break;
             }
             default: {

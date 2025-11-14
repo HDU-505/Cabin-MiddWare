@@ -40,14 +40,16 @@ public class ExperimentStateMachine {
         transitionTable.put(ExperimentState.RUNNING, Map.of(
                 ExperimentEvent.PAUSE_EXPERIMENT, ExperimentState.PAUSED,
                 ExperimentEvent.END_EXPERIMENT, ExperimentState.ENDED,
-                ExperimentEvent.ERROR_OCCURED, ExperimentState.ERROR
+                ExperimentEvent.ERROR_OCCURED, ExperimentState.ERROR,
+                ExperimentEvent.RESET_EXPERIMENT, ExperimentState.NOT_STARTED
         ));
 
         // PAUSED 状态
         transitionTable.put(ExperimentState.PAUSED, Map.of(
                 ExperimentEvent.RESUME_EXPERIMENT, ExperimentState.RUNNING,
                 ExperimentEvent.END_EXPERIMENT, ExperimentState.ENDED,
-                ExperimentEvent.ERROR_OCCURED, ExperimentState.ERROR
+                ExperimentEvent.ERROR_OCCURED, ExperimentState.ERROR,
+                ExperimentEvent.RESET_EXPERIMENT, ExperimentState.NOT_STARTED
         ));
 
         // ENDED 状态（终态）

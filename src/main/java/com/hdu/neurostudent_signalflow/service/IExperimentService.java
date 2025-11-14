@@ -19,4 +19,6 @@ public interface IExperimentService {
     String createExperiment(Experiment experiment);
 
     boolean startExperiment(String experimentId);
+
+    boolean stopExperiment(String experimentId);
 }

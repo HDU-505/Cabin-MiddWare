@@ -34,6 +34,9 @@ public class MindToothDeviceLister extends DeviceLister {
     //创建一个队列，用于存储获取的数据，
     private BlockingDeque<double[]> recvData = new LinkedBlockingDeque<>(); //接收队列
 
+    public Thread mindToothDataThread = null;
+    public Thread mindToothImpThread = null;
+
     @Override
     public void Lister() {
         super.Lister();
@@ -53,8 +56,10 @@ public class MindToothDeviceLister extends DeviceLister {
         mindToothDataLister.setMindToothDeviceAdatper(mindToothDeviceAdatper);
         mindToothImpLister.setRecQueue(recvData);
         //启动数据监听程序
-        new Thread(mindToothDataLister).start();
+        mindToothDataThread = new Thread(mindToothDataLister);
+        mindToothDataThread.start();
         //启动阻抗值监听程序
-        new Thread(mindToothImpLister).start();
+        mindToothImpThread = new Thread(mindToothImpLister);
+        mindToothImpThread.start();
     }
 }
